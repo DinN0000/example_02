@@ -95,19 +95,6 @@ export default function Terminal() {
     addNextLine();
   }, []);
 
-  const showIntro = useCallback(() => {
-    const introLines: TerminalLine[] = [
-      { type: "system", content: `$ ssh visitor@portfolio.dev` },
-      { type: "system", content: "Connecting to portfolio.dev..." },
-      { type: "system", content: "✓ Connection established" },
-      { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
-      { type: "output", content: "" },
-    ];
-    addLines(introLines, () => {
-      setTimeout(() => showHome(), 300);
-    });
-  }, [addLines]);
-
   const showHome = useCallback(() => {
     setCurrentSection("home");
     const homeLines: TerminalLine[] = [
@@ -127,6 +114,19 @@ export default function Terminal() {
     ];
     addLines(homeLines, () => setShowMenu(true));
   }, [addLines]);
+
+  const showIntro = useCallback(() => {
+    const introLines: TerminalLine[] = [
+      { type: "system", content: `$ ssh visitor@portfolio.dev` },
+      { type: "system", content: "Connecting to portfolio.dev..." },
+      { type: "system", content: "✓ Connection established" },
+      { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
+      { type: "output", content: "" },
+    ];
+    addLines(introLines, () => {
+      setTimeout(() => showHome(), 300);
+    });
+  }, [addLines, showHome]);
 
   const showWork = useCallback(() => {
     setCurrentSection("work");
@@ -397,6 +397,7 @@ export default function Terminal() {
 
   useEffect(() => {
     showIntro();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
