@@ -82,9 +82,11 @@ export default function Terminal() {
 
     const addNextLine = () => {
       if (index < newLines.length) {
-        setLines(prev => [...prev, newLines[index]]);
+        const currentLine = newLines[index];
+        const currentType = currentLine?.type;
+        setLines(prev => [...prev, currentLine]);
         index++;
-        const delay = newLines[index - 1]?.type === "ascii" ? 5 : 40;
+        const delay = currentType === "ascii" ? 5 : 40;
         setTimeout(addNextLine, delay);
       } else {
         setIsTyping(false);
@@ -409,6 +411,7 @@ export default function Terminal() {
   }, [isTyping]);
 
   const renderLine = (line: TerminalLine, index: number) => {
+    if (!line) return null;
     switch (line.type) {
       case "command":
         return (
