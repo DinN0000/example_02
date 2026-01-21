@@ -8,10 +8,14 @@ type Section = "intro" | "home" | "work" | "work-detail" | "fun" | "fun-detail" 
 interface TerminalLine {
   type: "command" | "output" | "ascii" | "system" | "menu" | "divider";
   content: string;
-  isNew?: boolean;
 }
 
-const COMMANDS = ["home", "work", "fun", "resume", "clear", "help"];
+const MENU_ITEMS = [
+  { key: "0", cmd: "home", label: "/home" },
+  { key: "1", cmd: "work", label: "/work" },
+  { key: "2", cmd: "fun", label: "/fun" },
+  { key: "3", cmd: "resume", label: "/resume" },
+];
 
 export default function Terminal() {
   const [lines, setLines] = useState<TerminalLine[]>([]);
@@ -24,11 +28,18 @@ export default function Terminal() {
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const scrollToBottom = useCallback(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, []);
+
   const askClaude = useCallback(async (question: string) => {
     setIsLoading(true);
+    setShowMenu(false);
     setLines(prev => [
       ...prev,
-      { type: "command", content: `$ ${question}` },
+      { type: "command", content: `> ${question}` },
       { type: "system", content: "[thinking...]" },
     ]);
 
@@ -60,24 +71,21 @@ export default function Terminal() {
       });
     } finally {
       setIsLoading(false);
-    }
-  }, []);
-
-  const scrollToBottom = useCallback(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+      setShowMenu(true);
     }
   }, []);
 
   const addLines = useCallback((newLines: TerminalLine[], callback?: () => void) => {
     setIsTyping(true);
+    setShowMenu(false);
     let index = 0;
 
     const addNextLine = () => {
       if (index < newLines.length) {
-        setLines(prev => [...prev, { ...newLines[index], isNew: true }]);
+        setLines(prev => [...prev, newLines[index]]);
         index++;
-        setTimeout(addNextLine, newLines[index - 1]?.type === "ascii" ? 10 : 30);
+        const delay = newLines[index - 1]?.type === "ascii" ? 5 : 40;
+        setTimeout(addNextLine, delay);
       } else {
         setIsTyping(false);
         callback?.();
@@ -89,23 +97,24 @@ export default function Terminal() {
 
   const showIntro = useCallback(() => {
     const introLines: TerminalLine[] = [
-      { type: "system", content: "$ ssh visitor@portfolio.dev" },
+      { type: "system", content: `$ ssh visitor@portfolio.dev` },
       { type: "system", content: "Connecting to portfolio.dev..." },
       { type: "system", content: "✓ Connection established" },
       { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
-      setTimeout(() => showHome(), 500);
+      setTimeout(() => showHome(), 300);
     });
   }, [addLines]);
 
   const showHome = useCallback(() => {
     setCurrentSection("home");
     const homeLines: TerminalLine[] = [
-      { type: "command", content: "$ cat home.md" },
+      { type: "command", content: `user@portfolio:~$ cat home.md` },
       { type: "output", content: "" },
-      { type: "output", content: `✱ ${portfolio.home.tagline}` },
+      { type: "output", content: `✱` },
+      { type: "output", content: portfolio.home.tagline },
       { type: "ascii", content: portfolio.home.asciiArt },
       { type: "output", content: "" },
       ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
@@ -121,9 +130,8 @@ export default function Terminal() {
 
   const showWork = useCallback(() => {
     setCurrentSection("work");
-    setShowMenu(false);
     const workLines: TerminalLine[] = [
-      { type: "command", content: "$ cat work.md" },
+      { type: "command", content: `user@portfolio:~$ cat work.md` },
       { type: "ascii", content: portfolio.work.asciiArt },
       { type: "output", content: "" },
       { type: "output", content: portfolio.work.description },
@@ -134,10 +142,14 @@ export default function Terminal() {
 
     portfolio.work.projects.forEach((project, index) => {
       workLines.push(
+        { type: "output", content: `●` },
         { type: "output", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: `   ${project.period} | ${project.role}` },
-        { type: "output", content: `   ${project.summary}` },
-        { type: "output", content: `   [${project.tags.join(", ")}]` },
+        { type: "output", content: `●` },
+        { type: "output", content: `${project.period} | ${project.role}` },
+        { type: "output", content: `●` },
+        { type: "output", content: project.summary },
+        { type: "output", content: `●` },
+        { type: "output", content: `[${project.tags.join(", ")}]` },
         { type: "output", content: "" },
       );
     });
@@ -157,22 +169,33 @@ export default function Terminal() {
 
     setCurrentSection("work-detail");
     setSelectedProject(projectSlug);
-    setShowMenu(false);
 
     const detailLines: TerminalLine[] = [
-      { type: "command", content: `$ cat work/${project.slug}.md` },
+      { type: "command", content: `user@portfolio:~$ cat work/${project.slug}.md` },
       { type: "output", content: "" },
       { type: "output", content: `# ${project.title}` },
       { type: "output", content: "" },
+      { type: "output", content: `●` },
       { type: "output", content: `📅 ${project.period}` },
+      { type: "output", content: `●` },
       { type: "output", content: `👤 ${project.role}` },
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      ...project.description.map(line => ({ type: "output" as const, content: line })),
-      { type: "output", content: "" },
-      { type: "output", content: `🏷️  ${project.tags.join(" · ")}` },
     ];
+
+    project.description.forEach(line => {
+      detailLines.push(
+        { type: "output", content: `●` },
+        { type: "output", content: line },
+      );
+    });
+
+    detailLines.push(
+      { type: "output", content: "" },
+      { type: "output", content: `●` },
+      { type: "output", content: `🏷️  ${project.tags.join(" · ")}` },
+    );
 
     if (project.link) {
       detailLines.push(
@@ -186,9 +209,8 @@ export default function Terminal() {
 
   const showFun = useCallback(() => {
     setCurrentSection("fun");
-    setShowMenu(false);
     const funLines: TerminalLine[] = [
-      { type: "command", content: "$ cat fun.md" },
+      { type: "command", content: `user@portfolio:~$ cat fun.md` },
       { type: "ascii", content: portfolio.fun.asciiArt },
       { type: "output", content: "" },
       { type: "output", content: portfolio.fun.description },
@@ -199,12 +221,22 @@ export default function Terminal() {
 
     portfolio.fun.projects.forEach((project, index) => {
       funLines.push(
+        { type: "output", content: `●` },
         { type: "output", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: `   ${project.summary}` },
-        ...project.description.map(line => ({ type: "output" as const, content: `   ${line}` })),
+        { type: "output", content: `●` },
+        { type: "output", content: project.summary },
       );
+      project.description.forEach(line => {
+        funLines.push(
+          { type: "output", content: `●` },
+          { type: "output", content: line },
+        );
+      });
       if (project.link) {
-        funLines.push({ type: "output", content: `   → ${project.link} ↗` });
+        funLines.push(
+          { type: "output", content: `●` },
+          { type: "output", content: `→ ${project.link} ↗` },
+        );
       }
       funLines.push({ type: "output", content: "" });
     });
@@ -214,9 +246,8 @@ export default function Terminal() {
 
   const showResume = useCallback(() => {
     setCurrentSection("resume");
-    setShowMenu(false);
     const resumeLines: TerminalLine[] = [
-      { type: "command", content: "$ cat resume.md" },
+      { type: "command", content: `user@portfolio:~$ cat resume.md` },
       { type: "ascii", content: portfolio.resume.asciiArt },
       { type: "output", content: "" },
       { type: "output", content: "## Experience" },
@@ -225,9 +256,12 @@ export default function Terminal() {
 
     portfolio.resume.experience.forEach(exp => {
       resumeLines.push(
-        { type: "output", content: `● ${exp.period}` },
-        { type: "output", content: `  ${exp.company} — ${exp.role}` },
-        { type: "output", content: `  ${exp.description}` },
+        { type: "output", content: `●` },
+        { type: "output", content: exp.period },
+        { type: "output", content: `●` },
+        { type: "output", content: `${exp.company} — ${exp.role}` },
+        { type: "output", content: `●` },
+        { type: "output", content: exp.description },
         { type: "output", content: "" },
       );
     });
@@ -241,9 +275,12 @@ export default function Terminal() {
 
     portfolio.resume.education.forEach(edu => {
       resumeLines.push(
-        { type: "output", content: `● ${edu.period}` },
-        { type: "output", content: `  ${edu.school} — ${edu.major}` },
-        { type: "output", content: `  ${edu.description}` },
+        { type: "output", content: `●` },
+        { type: "output", content: edu.period },
+        { type: "output", content: `●` },
+        { type: "output", content: `${edu.school} — ${edu.major}` },
+        { type: "output", content: `●` },
+        { type: "output", content: edu.description },
         { type: "output", content: "" },
       );
     });
@@ -253,41 +290,32 @@ export default function Terminal() {
       { type: "output", content: "" },
       { type: "output", content: "## Skills" },
       { type: "output", content: "" },
+      { type: "output", content: `●` },
       { type: "output", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
+      { type: "output", content: `●` },
       { type: "output", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
+      { type: "output", content: `●` },
       { type: "output", content: `Soft: ${portfolio.resume.skills.soft.join(" · ")}` },
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
+      { type: "output", content: `●` },
       { type: "output", content: `📧 ${portfolio.profile.email}` },
+      { type: "output", content: `●` },
       { type: "output", content: `🔗 ${portfolio.profile.github}` },
+      { type: "output", content: `●` },
       { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
     );
 
     addLines(resumeLines, () => setShowMenu(true));
   }, [addLines]);
 
-  const showHelp = useCallback(() => {
-    setShowMenu(false);
-    const helpLines: TerminalLine[] = [
-      { type: "command", content: "$ help" },
-      { type: "output", content: "" },
-      { type: "output", content: "사용 가능한 명령어:" },
-      { type: "output", content: "" },
-      { type: "output", content: "  home     홈으로 이동" },
-      { type: "output", content: "  work     프로젝트 보기" },
-      { type: "output", content: "  fun      사이드 프로젝트" },
-      { type: "output", content: "  resume   이력서" },
-      { type: "output", content: "  clear    화면 초기화" },
-      { type: "output", content: "  help     도움말" },
-      { type: "output", content: "" },
-      { type: "output", content: "또는 자유롭게 질문을 입력하세요." },
-    ];
-    addLines(helpLines, () => setShowMenu(true));
-  }, [addLines]);
-
   const handleCommand = useCallback((cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
+
+    if (trimmed === "" && showMenu) {
+      return;
+    }
 
     if (trimmed === "clear") {
       setLines([]);
@@ -296,8 +324,16 @@ export default function Terminal() {
       return;
     }
 
-    if (trimmed === "help") {
-      showHelp();
+    // Handle numeric menu selection
+    const menuItem = MENU_ITEMS.find(item => item.key === trimmed);
+    if (menuItem) {
+      setLines(prev => [...prev, { type: "output", content: "" }]);
+      switch (menuItem.cmd) {
+        case "home": showHome(); break;
+        case "work": showWork(); break;
+        case "fun": showFun(); break;
+        case "resume": showResume(); break;
+      }
       return;
     }
 
@@ -337,17 +373,25 @@ export default function Terminal() {
 
     // If not a command, treat as a question for Claude
     askClaude(cmd);
-  }, [currentSection, showIntro, showHome, showWork, showWorkDetail, showFun, showResume, showHelp, askClaude]);
+  }, [currentSection, showMenu, showIntro, showHome, showWork, showWorkDetail, showFun, showResume, askClaude]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isTyping || isLoading) return;
+    if (isTyping || isLoading) return;
+
+    // Empty enter shows/hides menu
+    if (!input.trim()) {
+      setShowMenu(prev => !prev);
+      return;
+    }
+
     handleCommand(input);
     setInput("");
   };
 
   const handleMenuClick = (cmd: string) => {
-    if (isTyping) return;
+    if (isTyping || isLoading) return;
+    setInput("");
     handleCommand(cmd);
   };
 
@@ -367,13 +411,13 @@ export default function Terminal() {
     switch (line.type) {
       case "command":
         return (
-          <div key={index} className="text-accent">
+          <div key={index} className="text-accent font-medium">
             {line.content}
           </div>
         );
       case "ascii":
         return (
-          <pre key={index} className="text-accent text-xs leading-none whitespace-pre overflow-x-auto">
+          <pre key={index} className="text-accent text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto">
             {line.content}
           </pre>
         );
@@ -385,7 +429,7 @@ export default function Terminal() {
         );
       case "divider":
         return (
-          <div key={index} className="text-border">
+          <div key={index} className="text-border select-none">
             {line.content}
           </div>
         );
@@ -407,73 +451,68 @@ export default function Terminal() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-mono">
       {/* Status Bar */}
-      <div className="sticky top-0 z-10 bg-card border-b border-border px-4 py-2 flex justify-between items-center text-sm">
-        <span className="text-muted">
-          visitor@portfolio <span className="text-accent">~</span>
-        </span>
-        <div className="flex gap-4 text-muted">
-          <span>PROJECTS: <span className="text-accent">{portfolio.metrics.projects}</span></span>
-          <span>EXP: <span className="text-accent">{portfolio.metrics.exp}</span></span>
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-3 flex justify-between items-center text-sm">
+          <span className="text-foreground">
+            {portfolio.profile.name} — <span className="text-muted">portfolio</span>
+          </span>
+          <div className="flex gap-6 text-muted">
+            <span>PROJECTS: <span className="text-accent">{portfolio.metrics.projects}</span></span>
+            <span>EXP: <span className="text-accent">{portfolio.metrics.exp}</span></span>
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Terminal Output */}
-      <div
+      <main
         ref={terminalRef}
-        className="flex-1 overflow-y-auto p-4 md:p-8 space-y-1"
+        className="flex-1 overflow-y-auto"
         onClick={() => inputRef.current?.focus()}
       >
-        {lines.map((line, index) => renderLine(line, index))}
-      </div>
+        <div className="max-w-4xl mx-auto px-6 py-8 space-y-0.5">
+          {lines.map((line, index) => renderLine(line, index))}
+        </div>
+      </main>
 
       {/* Menu */}
       {showMenu && !isTyping && (
-        <div className="px-4 md:px-8 pb-2 flex flex-wrap gap-2">
-          <button
-            onClick={() => handleMenuClick("home")}
-            className="text-sm text-muted hover:text-accent transition-colors"
-          >
-            → home
-          </button>
-          <button
-            onClick={() => handleMenuClick("work")}
-            className="text-sm text-muted hover:text-accent transition-colors"
-          >
-            → work
-          </button>
-          <button
-            onClick={() => handleMenuClick("fun")}
-            className="text-sm text-muted hover:text-accent transition-colors"
-          >
-            → fun
-          </button>
-          <button
-            onClick={() => handleMenuClick("resume")}
-            className="text-sm text-muted hover:text-accent transition-colors"
-          >
-            → resume
-          </button>
-        </div>
+        <nav className="border-t border-border bg-card/50">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {MENU_ITEMS.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => handleMenuClick(item.cmd)}
+                  className="text-muted hover:text-accent transition-colors"
+                >
+                  <span className="text-accent">[{item.key}]</span> {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
       )}
 
       {/* Input */}
-      <div className="sticky bottom-0 bg-background border-t border-border p-4">
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <span className="text-accent">$</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isTyping || isLoading}
-            placeholder={isLoading ? "생각 중..." : isTyping ? "" : "명령어 또는 질문을 입력하세요..."}
-            className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <span className={`text-accent ${isTyping || isLoading ? "" : "cursor-blink"}`}>▋</span>
-        </form>
-      </div>
+      <footer className="sticky bottom-0 bg-background border-t border-border">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <form onSubmit={handleSubmit} className="flex items-center gap-3">
+            <span className="text-accent select-none">&gt;</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isTyping || isLoading}
+              placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+              className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+          </form>
+        </div>
+      </footer>
     </div>
   );
 }
