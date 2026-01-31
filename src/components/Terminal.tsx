@@ -297,7 +297,7 @@ export default function Terminal() {
       { type: "output", content: `●` },
       { type: "output", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
       { type: "output", content: `●` },
-      { type: "output", content: `Soft: ${portfolio.resume.skills.soft.join(" · ")}` },
+      { type: "output", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
