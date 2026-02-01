@@ -26,9 +26,27 @@ export default function Terminal() {
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>("");
+  const [showPressEnter, setShowPressEnter] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Real-time clock
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes}:${seconds}`);
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     if (bottomRef.current) {
@@ -227,9 +245,25 @@ export default function Terminal() {
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
-      setTimeout(() => showHome(), 300);
+      setShowPressEnter(true);
     });
-  }, [addLines, showHome]);
+  }, [addLines]);
+
+  // Handle Enter key for intro
+  useEffect(() => {
+    if (!showPressEnter) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && showPressEnter) {
+        setShowPressEnter(false);
+        setIntroComplete(true);
+        showHome();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showPressEnter, showHome]);
 
   const showAbout = useCallback(() => {
     setCurrentSection("home"); // reuse home section state
@@ -434,6 +468,8 @@ export default function Terminal() {
     if (trimmed === "clear") {
       setLines([]);
       setShowMenu(false);
+      setShowPressEnter(false);
+      setIntroComplete(false);
       showIntro();
       return;
     }
@@ -499,6 +535,14 @@ export default function Terminal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isTyping || isLoading) return;
+
+    // Handle intro "Press Enter"
+    if (showPressEnter) {
+      setShowPressEnter(false);
+      setIntroComplete(true);
+      showHome();
+      return;
+    }
 
     // Empty enter shows/hides menu
     if (!input.trim()) {
@@ -590,18 +634,39 @@ export default function Terminal() {
 
   return (
     <div className="fixed inset-0 bg-black font-mono">
+      {/* Scanline overlay */}
+      <div className="scanlines" />
+      
       {/* 카드 컨테이너 */}
       <div className="absolute inset-3 bg-card rounded-xl border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         
         {/* 헤더 */}
         <header className="h-14 shrink-0 bg-card border-b border-border flex items-center justify-center">
           <div className="w-full max-w-3xl px-6 flex items-center justify-between">
-            <span className="text-muted text-sm">
-              {portfolio.profile.name} — portfolio
-            </span>
-            <div className="flex gap-4 text-muted text-xs">
-              <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
-              <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+            {/* Traffic lights (macOS style) */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/90 hover:bg-red-400 transition-colors" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/90 hover:bg-yellow-400 transition-colors" />
+                <div className="w-3 h-3 rounded-full bg-green-500/90 hover:bg-green-400 transition-colors" />
+              </div>
+              <span className="text-muted text-sm hidden sm:inline">
+                {portfolio.profile.name} — portfolio
+              </span>
+            </div>
+            
+            {/* Tagline badge */}
+            <div className="hidden md:flex items-center">
+              <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-xs glow-cyan">
+                ★ where ideas become products.
+              </span>
+            </div>
+            
+            {/* Stats & Clock */}
+            <div className="flex items-center gap-4 text-muted text-xs">
+              <span className="hidden sm:inline">PROJECTS: <span className="text-highlight-cyan glow-cyan">{portfolio.metrics.projects}</span></span>
+              <span className="hidden sm:inline">EXP: <span className="text-highlight-orange glow-orange">{portfolio.metrics.exp}</span></span>
+              <span className="text-accent font-medium glow-cyan">{currentTime}</span>
             </div>
           </div>
         </header>
@@ -614,12 +679,22 @@ export default function Terminal() {
         >
           <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
+            
+            {/* Press Enter to continue */}
+            {showPressEnter && (
+              <div className="mt-8 text-center fade-in">
+                <span className="text-accent glow-cyan cursor-blink-text">
+                  [ Press Enter to continue ]
+                </span>
+              </div>
+            )}
+            
             <div ref={bottomRef} />
           </div>
         </main>
 
         {/* 메뉴 */}
-        {showMenu && !isTyping && (
+        {showMenu && !isTyping && introComplete && (
           <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
             <div className="w-full max-w-3xl px-6 py-3">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
@@ -641,14 +716,20 @@ export default function Terminal() {
         <footer className="h-14 shrink-0 bg-card border-t border-border flex items-center justify-center">
           <div className="w-full max-w-3xl px-6">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
-              <span className="text-accent select-none">&gt;</span>
+              <span className="text-accent select-none glow-cyan">&gt;</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                disabled={isTyping || isLoading}
-                placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+                disabled={isTyping || isLoading || showPressEnter}
+                placeholder={
+                  showPressEnter 
+                    ? "Enter를 눌러 계속하세요..." 
+                    : isLoading 
+                      ? "thinking..." 
+                      : "명령어를 입력하세요..."
+                }
                 className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm"
                 autoComplete="off"
                 spellCheck={false}
