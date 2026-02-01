@@ -592,13 +592,21 @@ export default function Terminal() {
     <div className="h-screen bg-background flex items-center justify-center font-mono p-4">
       {/* Main Container with rounded border */}
       <div className="w-full h-full bg-card rounded-xl border border-border overflow-hidden flex flex-col">
-        {/* Title Bar - Full Width */}
-        <header className="shrink-0 bg-card border-b border-border">
-          <div className="px-6 py-5 flex justify-between items-center">
-            <span className="text-foreground font-medium">
-              <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
+        {/* Title Bar - macOS style */}
+        <header className="shrink-0 bg-card/80 border-b border-border">
+          <div className="px-5 py-3 flex items-center gap-4">
+            {/* Window Controls */}
+            <div className="flex gap-2">
+              <span className="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+              <span className="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+              <span className="w-3 h-3 rounded-full bg-[#28c840]"></span>
+            </div>
+            {/* Title */}
+            <span className="text-muted text-sm flex-1 text-center">
+              {portfolio.profile.name} — portfolio
             </span>
-            <div className="flex gap-6 text-muted text-sm">
+            {/* Stats */}
+            <div className="flex gap-4 text-muted text-xs">
               <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
               <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
             </div>
