@@ -607,10 +607,10 @@ export default function Terminal() {
         {/* 콘텐츠 - 스크롤 가능 */}
         <main
           ref={terminalRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden"
+          className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="max-w-3xl mx-auto px-6 py-6 space-y-0.5">
+          <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
             <div ref={bottomRef} />
           </div>
@@ -618,8 +618,8 @@ export default function Terminal() {
 
         {/* 메뉴 */}
         {showMenu && !isTyping && (
-          <nav className="shrink-0 border-t border-border bg-card/50">
-            <div className="max-w-3xl mx-auto px-6 py-3">
+          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
+            <div className="w-full max-w-3xl px-6 py-3">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {MENU_ITEMS.map((item) => (
                   <button
@@ -636,8 +636,8 @@ export default function Terminal() {
         )}
 
         {/* 푸터 */}
-        <footer className="h-14 shrink-0 bg-card border-t border-border px-6 flex items-center">
-          <div className="max-w-3xl mx-auto w-full">
+        <footer className="h-14 shrink-0 bg-card border-t border-border flex items-center justify-center">
+          <div className="w-full max-w-3xl px-6">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
               <input
