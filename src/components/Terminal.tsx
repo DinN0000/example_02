@@ -31,7 +31,10 @@ export default function Terminal() {
 
   const scrollToBottom = useCallback(() => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+      terminalRef.current.scrollTo({
+        top: terminalRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, []);
 
@@ -132,15 +135,11 @@ export default function Terminal() {
     setCurrentSection("home");
     const homeLines: TerminalLine[] = [
       { type: "command", content: `user@portfolio:~$ cat home.md` },
-      { type: "output", content: "" },
       { type: "highlight", content: `✱` },
       { type: "section-title", content: `## ${portfolio.home.tagline}` },
       { type: "ascii", content: portfolio.home.asciiArt },
-      { type: "output", content: "" },
       ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       ...portfolio.home.highlights.map(line => ({ type: "highlight" as const, content: line })),
       { type: "output", content: "" },
       { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
@@ -168,55 +167,42 @@ export default function Terminal() {
       { type: "ascii", content: portfolio.about.asciiArt },
       { type: "output", content: "" },
       { type: "section-title", content: `## ${portfolio.about.whoAmI.title}` },
-      { type: "output", content: "" },
       ...portfolio.about.whoAmI.content.map(line => ({ type: "output" as const, content: line })),
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "section-title", content: `## ${portfolio.about.coreValues.title}` },
-      { type: "output", content: "" },
       ...portfolio.about.coreValues.content.map(line => ({ type: "output" as const, content: line })),
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "section-title", content: `## ${portfolio.about.strengths.title}` },
-      { type: "output", content: "" },
     ];
 
     portfolio.about.strengths.items.forEach(item => {
       aboutLines.push(
-        { type: "output", content: `●` },
-        { type: "output", content: `${item.name}` },
-        { type: "output", content: `●` },
+        { type: "highlight", content: item.name },
         { type: "output", content: item.description },
-        { type: "output", content: "" },
       );
     });
 
     aboutLines.push(
+      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "section-title", content: `## ${portfolio.about.background.title}` },
-      { type: "output", content: "" },
       { type: "highlight", content: `Education` },
-      { type: "output", content: "" },
     );
 
     portfolio.about.background.education.forEach(edu => {
       aboutLines.push(
-        { type: "output", content: `● ${edu.period} — ${edu.school}, ${edu.major}` },
+        { type: "output", content: `${edu.period} — ${edu.school}, ${edu.major}` },
       );
     });
 
     aboutLines.push(
       { type: "output", content: "" },
       { type: "highlight", content: `Career` },
-      { type: "output", content: "" },
     );
 
     portfolio.about.background.career.forEach(career => {
       aboutLines.push(
-        { type: "output", content: `● ${career.period} — ${career.company}, ${career.role}` },
+        { type: "output", content: `${career.period} — ${career.company}, ${career.role}` },
       );
     });
 
@@ -230,20 +216,14 @@ export default function Terminal() {
       { type: "ascii", content: portfolio.work.asciiArt },
       { type: "output", content: "" },
       { type: "output", content: portfolio.work.description },
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
     ];
 
     portfolio.work.projects.forEach((project, index) => {
       workLines.push(
-        { type: "output", content: `●` },
         { type: "highlight", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: `●` },
         { type: "output", content: `${project.period} | ${project.role}` },
-        { type: "output", content: `●` },
         { type: "output", content: project.summary },
-        { type: "output", content: `●` },
         { type: "system", content: `[${project.tags.join(", ")}]` },
         { type: "output", content: "" },
       );
@@ -251,7 +231,6 @@ export default function Terminal() {
 
     workLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "system", content: "프로젝트 번호를 입력하면 상세 내용을 볼 수 있습니다." },
     );
 
@@ -269,34 +248,22 @@ export default function Terminal() {
       { type: "command", content: `user@portfolio:~$ cat work/${project.slug}.md` },
       { type: "output", content: "" },
       { type: "section-title", content: `## ${project.title}` },
-      { type: "output", content: "" },
-      { type: "output", content: `●` },
       { type: "output", content: `📅 ${project.period}` },
-      { type: "output", content: `●` },
       { type: "output", content: `👤 ${project.role}` },
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
     ];
 
     project.description.forEach(line => {
-      detailLines.push(
-        { type: "output", content: `●` },
-        { type: "output", content: line },
-      );
+      detailLines.push({ type: "output", content: line });
     });
 
     detailLines.push(
       { type: "output", content: "" },
-      { type: "output", content: `●` },
       { type: "output", content: `🏷️  ${project.tags.join(" · ")}` },
     );
 
     if (project.link) {
-      detailLines.push(
-        { type: "output", content: "" },
-        { type: "output", content: `→ ${project.link} ↗` },
-      );
+      detailLines.push({ type: "output", content: `→ ${project.link} ↗` });
     }
 
     addLines(detailLines, () => setShowMenu(true));
@@ -309,29 +276,19 @@ export default function Terminal() {
       { type: "ascii", content: portfolio.fun.asciiArt },
       { type: "output", content: "" },
       { type: "output", content: portfolio.fun.description },
-      { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
     ];
 
     portfolio.fun.projects.forEach((project, index) => {
       funLines.push(
-        { type: "output", content: `●` },
         { type: "highlight", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: `●` },
         { type: "output", content: project.summary },
       );
       project.description.forEach(line => {
-        funLines.push(
-          { type: "output", content: `●` },
-          { type: "output", content: line },
-        );
+        funLines.push({ type: "output", content: line });
       });
       if (project.link) {
-        funLines.push(
-          { type: "output", content: `●` },
-          { type: "system", content: `→ ${project.link} ↗` },
-        );
+        funLines.push({ type: "system", content: `→ ${project.link} ↗` });
       }
       funLines.push({ type: "output", content: "" });
     });
@@ -346,16 +303,11 @@ export default function Terminal() {
       { type: "ascii", content: portfolio.resume.asciiArt },
       { type: "output", content: "" },
       { type: "section-title", content: "## Experience" },
-      { type: "output", content: "" },
     ];
 
     portfolio.resume.experience.forEach(exp => {
       resumeLines.push(
-        { type: "output", content: `●` },
-        { type: "output", content: exp.period },
-        { type: "output", content: `●` },
-        { type: "output", content: `${exp.company} — ${exp.role}` },
-        { type: "output", content: `●` },
+        { type: "output", content: `${exp.period} | ${exp.company} — ${exp.role}` },
         { type: "output", content: exp.description },
         { type: "output", content: "" },
       );
@@ -363,18 +315,12 @@ export default function Terminal() {
 
     resumeLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "section-title", content: "## Education" },
-      { type: "output", content: "" },
     );
 
     portfolio.resume.education.forEach(edu => {
       resumeLines.push(
-        { type: "output", content: `●` },
-        { type: "output", content: edu.period },
-        { type: "output", content: `●` },
-        { type: "output", content: `${edu.school} — ${edu.major}` },
-        { type: "output", content: `●` },
+        { type: "output", content: `${edu.period} | ${edu.school} — ${edu.major}` },
         { type: "output", content: edu.description },
         { type: "output", content: "" },
       );
@@ -382,23 +328,14 @@ export default function Terminal() {
 
     resumeLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
       { type: "section-title", content: "## Skills" },
-      { type: "output", content: "" },
-      { type: "output", content: `●` },
       { type: "highlight", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
-      { type: "output", content: `●` },
       { type: "highlight", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
-      { type: "output", content: `●` },
       { type: "highlight", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: "" },
-      { type: "output", content: `●` },
       { type: "output", content: `📧 ${portfolio.profile.email}` },
-      { type: "output", content: `●` },
       { type: "output", content: `🔗 ${portfolio.profile.github}` },
-      { type: "output", content: `●` },
       { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
     );
 
