@@ -585,8 +585,8 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex justify-center font-mono">
-      <div className="w-full max-w-4xl flex flex-col">
+    <div className="h-screen bg-background flex justify-center font-mono overflow-hidden">
+      <div className="w-full max-w-4xl flex flex-col h-full">
       {/* Status Bar */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
         <div className="px-6 py-3 flex justify-between items-center text-sm">
