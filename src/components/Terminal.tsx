@@ -589,12 +589,12 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center font-mono p-8">
+    <div className="h-screen w-screen bg-black flex items-center justify-center font-mono px-8 py-6">
       {/* Main Container with rounded border */}
-      <div className="w-full max-h-[calc(100vh-4rem)] h-[calc(100vh-4rem)] bg-card rounded-2xl border border-border overflow-hidden flex flex-col">
+      <div className="w-full h-full max-w-[calc(100vw-4rem)] max-h-[calc(100vh-3rem)] bg-card rounded-xl border border-border overflow-hidden flex flex-col">
         {/* Title Bar */}
-        <header className="shrink-0 bg-card border-b border-border">
-          <div className="px-6 py-4 flex justify-between items-center">
+        <header className="shrink-0 bg-card border-b border-border min-h-[50px] flex items-center">
+          <div className="px-6 w-full flex justify-between items-center">
             <span className="text-muted text-sm">
               {portfolio.profile.name} — portfolio
             </span>
@@ -637,8 +637,8 @@ export default function Terminal() {
         )}
 
         {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card border-t border-border flex justify-center">
-          <div className="w-full max-w-3xl px-6 py-4">
+        <footer className="shrink-0 bg-card border-t border-border min-h-[50px] flex items-center justify-center">
+          <div className="w-full max-w-3xl px-6">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
               <input
