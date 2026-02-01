@@ -589,7 +589,7 @@ export default function Terminal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black font-mono p-8">
+    <div className="fixed inset-0 bg-black font-mono p-3">
       {/* 카드 컨테이너 */}
       <div className="w-full h-full bg-card rounded-[24px] border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         
