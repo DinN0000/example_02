@@ -43,6 +43,69 @@ export const portfolio = {
     ],
   },
 
+  // ABOUT 섹션
+  about: {
+    asciiArt: `
+ █████╗ ██████╗  ██████╗ ██╗   ██╗████████╗
+██╔══██╗██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝
+███████║██████╔╝██║   ██║██║   ██║   ██║
+██╔══██║██╔══██╗██║   ██║██║   ██║   ██║
+██║  ██║██████╔╝╚██████╔╝╚██████╔╝   ██║
+╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝    ╚═╝
+`,
+    whoAmI: {
+      title: "WHO AM I?",
+      content: [
+        "맡은 제품에 대해 가장 잘 알고있는 사람이 되는",
+        "Product Owner 이종화입니다.",
+        "",
+        "어느 집단에서 어떤 일을 하더라도,",
+        "문제를 발굴하고 사용자의 입장에서 제품의 문제를 풀어내는 것이",
+        "서비스의 성공에 중요한 역할을 한다고 믿습니다.",
+      ],
+    },
+    coreValues: {
+      title: "CORE VALUES",
+      content: [
+        "● 문제 발굴 — 겉으로 드러난 요구사항이 아닌, 진짜 문제를 찾습니다",
+        "● 사용자 중심 — 사용자의 입장에서 제품의 문제를 풀어냅니다",
+      ],
+    },
+    strengths: {
+      title: "STRENGTHS",
+      items: [
+        {
+          name: "AI 생산성",
+          description: "팀 차원에서 AI 도구를 활용할 수 있도록 시스템 구축 (CLAUDE.md, Markdown 기반 산출물 표준화)",
+        },
+        {
+          name: "E2E 오너십",
+          description: "기획부터 딜리버리까지 전 과정을 책임지고, 복잡한 이해관계를 조율합니다",
+        },
+        {
+          name: "사용자 리서치",
+          description: "HCI Lab 석사 과정 (연세대 김진우 교수), IDI/FGI/A/B 테스트, AI 관련 논문 3편",
+        },
+        {
+          name: "규제 분석",
+          description: "VASP 규제 분석 및 Non-VASP 모델 도출, 자금추적 방법론 판례 분석",
+        },
+      ],
+    },
+    background: {
+      title: "BACKGROUND",
+      education: [
+        { period: "2019 - 2021", school: "연세대학교", major: "HCI 공학석사" },
+        { period: "2012 - 2019", school: "상명대학교", major: "컴퓨터과학 학사" },
+      ],
+      career: [
+        { period: "2022 - Present", company: "Lambda256", role: "Product Owner" },
+        { period: "2021 - 2022", company: "Gowid", role: "Product Manager" },
+        { period: "2019 - 2021", company: "HAII", role: "UX Researcher / PO" },
+      ],
+    },
+  },
+
   // WORK 섹션
   work: {
     asciiArt: `

@@ -12,9 +12,10 @@ interface TerminalLine {
 
 const MENU_ITEMS = [
   { key: "0", cmd: "home", label: "/home" },
-  { key: "1", cmd: "work", label: "/work" },
-  { key: "2", cmd: "fun", label: "/fun" },
-  { key: "3", cmd: "resume", label: "/resume" },
+  { key: "1", cmd: "about", label: "/about" },
+  { key: "2", cmd: "work", label: "/work" },
+  { key: "3", cmd: "fun", label: "/fun" },
+  { key: "4", cmd: "resume", label: "/resume" },
 ];
 
 export default function Terminal() {
@@ -159,6 +160,68 @@ export default function Terminal() {
       setTimeout(() => showHome(), 300);
     });
   }, [addLines, showHome]);
+
+  const showAbout = useCallback(() => {
+    setCurrentSection("home"); // reuse home section state
+    const aboutLines: TerminalLine[] = [
+      { type: "command", content: `user@portfolio:~$ cat about.md` },
+      { type: "ascii", content: portfolio.about.asciiArt },
+      { type: "output", content: "" },
+      { type: "output", content: `## ${portfolio.about.whoAmI.title}` },
+      { type: "output", content: "" },
+      ...portfolio.about.whoAmI.content.map(line => ({ type: "output" as const, content: line })),
+      { type: "output", content: "" },
+      { type: "divider", content: "──────────────────────────────────────────────────" },
+      { type: "output", content: "" },
+      { type: "output", content: `## ${portfolio.about.coreValues.title}` },
+      { type: "output", content: "" },
+      ...portfolio.about.coreValues.content.map(line => ({ type: "output" as const, content: line })),
+      { type: "output", content: "" },
+      { type: "divider", content: "──────────────────────────────────────────────────" },
+      { type: "output", content: "" },
+      { type: "output", content: `## ${portfolio.about.strengths.title}` },
+      { type: "output", content: "" },
+    ];
+
+    portfolio.about.strengths.items.forEach(item => {
+      aboutLines.push(
+        { type: "output", content: `●` },
+        { type: "output", content: `${item.name}` },
+        { type: "output", content: `●` },
+        { type: "output", content: item.description },
+        { type: "output", content: "" },
+      );
+    });
+
+    aboutLines.push(
+      { type: "divider", content: "──────────────────────────────────────────────────" },
+      { type: "output", content: "" },
+      { type: "output", content: `## ${portfolio.about.background.title}` },
+      { type: "output", content: "" },
+      { type: "output", content: `Education` },
+      { type: "output", content: "" },
+    );
+
+    portfolio.about.background.education.forEach(edu => {
+      aboutLines.push(
+        { type: "output", content: `● ${edu.period} — ${edu.school}, ${edu.major}` },
+      );
+    });
+
+    aboutLines.push(
+      { type: "output", content: "" },
+      { type: "output", content: `Career` },
+      { type: "output", content: "" },
+    );
+
+    portfolio.about.background.career.forEach(career => {
+      aboutLines.push(
+        { type: "output", content: `● ${career.period} — ${career.company}, ${career.role}` },
+      );
+    });
+
+    addLines(aboutLines, () => setShowMenu(true));
+  }, [addLines]);
 
   const showWork = useCallback(() => {
     setCurrentSection("work");
@@ -362,6 +425,7 @@ export default function Terminal() {
       setLines(prev => [...prev, { type: "output", content: "" }]);
       switch (menuItem.cmd) {
         case "home": showHome(); break;
+        case "about": showAbout(); break;
         case "work": showWork(); break;
         case "fun": showFun(); break;
         case "resume": showResume(); break;
@@ -372,6 +436,12 @@ export default function Terminal() {
     if (trimmed === "home") {
       setLines(prev => [...prev, { type: "output", content: "" }]);
       showHome();
+      return;
+    }
+
+    if (trimmed === "about") {
+      setLines(prev => [...prev, { type: "output", content: "" }]);
+      showAbout();
       return;
     }
 
@@ -405,7 +475,7 @@ export default function Terminal() {
 
     // If not a command, treat as a question for Claude
     askClaude(cmd);
-  }, [currentSection, showMenu, showIntro, showHome, showWork, showWorkDetail, showFun, showResume, askClaude]);
+  }, [currentSection, showMenu, showIntro, showHome, showAbout, showWork, showWorkDetail, showFun, showResume, askClaude]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
