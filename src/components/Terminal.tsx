@@ -593,8 +593,8 @@ export default function Terminal() {
       {/* Main Container with rounded border */}
       <div className="w-full max-h-[calc(100vh-4rem)] h-[calc(100vh-4rem)] bg-card rounded-2xl border border-border overflow-hidden flex flex-col">
         {/* Title Bar */}
-        <header className="shrink-0 bg-card/80 border-b border-border">
-          <div className="px-5 py-3 flex justify-between items-center">
+        <header className="shrink-0 bg-card border-b border-border">
+          <div className="px-6 py-4 flex justify-between items-center">
             <span className="text-muted text-sm">
               {portfolio.profile.name} — portfolio
             </span>
@@ -637,8 +637,8 @@ export default function Terminal() {
         )}
 
         {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card/80 border-t border-border flex justify-center">
-          <div className="w-full max-w-3xl px-6 py-3">
+        <footer className="shrink-0 bg-card border-t border-border flex justify-center">
+          <div className="w-full max-w-3xl px-6 py-4">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
               <input
