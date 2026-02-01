@@ -589,23 +589,25 @@ export default function Terminal() {
   };
 
   return (
-    <div className="h-screen bg-background flex flex-col font-mono overflow-hidden">
-      {/* Status Bar - Full Width */}
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
-        <div className="px-10 py-6 flex justify-between items-center">
-          <span className="text-foreground font-medium text-base">
-            <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
-          </span>
-          <div className="flex gap-8 text-muted">
-            <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
-            <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+    <div className="h-screen bg-background flex items-center justify-center font-mono p-4">
+      {/* Main Container with rounded border */}
+      <div className="w-full h-full max-w-6xl bg-card rounded-xl border border-border overflow-hidden flex flex-col">
+        {/* Status Bar - Full Width */}
+        <header className="bg-card/95 backdrop-blur border-b border-border">
+          <div className="px-10 py-6 flex justify-between items-center">
+            <span className="text-foreground font-medium text-base">
+              <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
+            </span>
+            <div className="flex gap-8 text-muted">
+              <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
+              <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Content Area - Centered */}
-      <div className="flex-1 flex justify-center overflow-hidden">
-        <div className="w-full max-w-3xl flex flex-col h-full">
+        {/* Content Area - Centered */}
+        <div className="flex-1 flex justify-center overflow-hidden">
+          <div className="w-full max-w-3xl flex flex-col h-full">
           {/* Terminal Output */}
           <main
             ref={terminalRef}
@@ -638,7 +640,7 @@ export default function Terminal() {
           )}
 
           {/* Input */}
-          <footer className="sticky bottom-0 bg-background border-t border-border">
+          <footer className="bg-card border-t border-border">
             <div className="px-6 py-8">
               <form onSubmit={handleSubmit} className="flex items-center gap-3">
                 <span className="text-accent select-none">&gt;</span>
@@ -657,6 +659,7 @@ export default function Terminal() {
               </form>
             </div>
           </footer>
+          </div>
         </div>
       </div>
     </div>
