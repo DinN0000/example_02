@@ -207,7 +207,10 @@ export default function Terminal() {
         { type: "ascii", content: portfolio.home.asciiArt },
         ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
         { type: "divider", content: "──────────────────────────────────────────────────" },
-        ...portfolio.home.highlights.map(line => ({ type: "highlight" as const, content: line })),
+        ...portfolio.home.highlights.flatMap(item => [
+          { type: "highlight" as const, content: `● ${item.title}` },
+          { type: "output" as const, content: `  ${item.desc}` },
+        ]),
         { type: "output", content: "" },
         { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
       ];
