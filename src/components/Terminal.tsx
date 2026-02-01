@@ -28,11 +28,11 @@ export default function Terminal() {
   const [showMenu, setShowMenu] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
-    if (terminalRef.current) {
-      // Instant scroll to follow content in real-time
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'instant', block: 'end' });
     }
   }, []);
 
@@ -608,6 +608,7 @@ export default function Terminal() {
       >
         <div className="px-6 py-8 space-y-0.5">
           {lines.map((line, index) => renderLine(line, index))}
+          <div ref={bottomRef} />
         </div>
       </main>
 
