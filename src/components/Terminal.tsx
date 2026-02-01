@@ -120,6 +120,10 @@ export default function Terminal() {
         const nextLine = newLines[index + 1];
         setLines(prev => [...prev, currentLine]);
         index++;
+        // Auto-scroll after each line is added
+        requestAnimationFrame(() => {
+          scrollToBottom();
+        });
         const delay = getDelay(currentLine, nextLine);
         setTimeout(addNextLine, delay);
       } else {
@@ -129,23 +133,89 @@ export default function Terminal() {
     };
 
     addNextLine();
-  }, []);
+  }, [scrollToBottom]);
+
+  // Loading bar animation function
+  const showLoadingBar = useCallback((filename: string, callback: () => void) => {
+    setIsTyping(true);
+    setShowMenu(false);
+    
+    const totalSteps = 20;
+    const filledChar = "█";
+    const emptyChar = "░";
+    let step = 0;
+    
+    // Add initial loading line
+    const loadingLineIndex = { current: -1 };
+    
+    setLines(prev => {
+      loadingLineIndex.current = prev.length;
+      return [...prev, { type: "system", content: `Loading ${filename}... ${emptyChar.repeat(totalSteps)} 0%` }];
+    });
+    
+    const updateProgress = () => {
+      step++;
+      const filled = filledChar.repeat(step);
+      const empty = emptyChar.repeat(totalSteps - step);
+      const percent = Math.round((step / totalSteps) * 100);
+      
+      setLines(prev => {
+        const newLines = [...prev];
+        if (loadingLineIndex.current >= 0 && loadingLineIndex.current < newLines.length) {
+          newLines[loadingLineIndex.current] = {
+            type: "system",
+            content: `Loading ${filename}... ${filled}${empty} ${percent}%`
+          };
+        }
+        return newLines;
+      });
+      
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+      
+      if (step < totalSteps) {
+        // Variable speed: slower at start and end, faster in middle
+        const progress = step / totalSteps;
+        let delay;
+        if (progress < 0.2) {
+          delay = 60 + Math.random() * 40; // Slow start
+        } else if (progress > 0.8) {
+          delay = 40 + Math.random() * 30; // Slight slowdown at end
+        } else {
+          delay = 20 + Math.random() * 25; // Fast middle
+        }
+        setTimeout(updateProgress, delay);
+      } else {
+        // Complete - remove loading line and proceed
+        setTimeout(() => {
+          setLines(prev => prev.slice(0, -1)); // Remove loading bar
+          setIsTyping(false);
+          callback();
+        }, 150);
+      }
+    };
+    
+    setTimeout(updateProgress, 100);
+  }, [scrollToBottom]);
 
   const showHome = useCallback(() => {
     setCurrentSection("home");
-    const homeLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat home.md` },
-      { type: "highlight", content: `✱` },
-      { type: "section-title", content: `## ${portfolio.home.tagline}` },
-      { type: "ascii", content: portfolio.home.asciiArt },
-      ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      ...portfolio.home.highlights.map(line => ({ type: "highlight" as const, content: line })),
-      { type: "output", content: "" },
-      { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
-    ];
-    addLines(homeLines, () => setShowMenu(true));
-  }, [addLines]);
+    showLoadingBar("home.md", () => {
+      const homeLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat home.md` },
+        { type: "highlight", content: `✱` },
+        { type: "section-title", content: `## ${portfolio.home.tagline}` },
+        { type: "ascii", content: portfolio.home.asciiArt },
+        ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        ...portfolio.home.highlights.map(line => ({ type: "highlight" as const, content: line })),
+        { type: "output", content: "" },
+        { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
+      ];
+      addLines(homeLines, () => setShowMenu(true));
+    });
+  }, [addLines, showLoadingBar]);
 
   const showIntro = useCallback(() => {
     const introLines: TerminalLine[] = [
@@ -162,80 +232,84 @@ export default function Terminal() {
 
   const showAbout = useCallback(() => {
     setCurrentSection("home"); // reuse home section state
-    const aboutLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat about.md` },
-      { type: "ascii", content: portfolio.about.asciiArt },
-      { type: "output", content: "" },
-      { type: "section-title", content: `## ${portfolio.about.whoAmI.title}` },
-      ...portfolio.about.whoAmI.content.map(line => ({ type: "output" as const, content: line })),
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "section-title", content: `## ${portfolio.about.coreValues.title}` },
-      ...portfolio.about.coreValues.content.map(line => ({ type: "output" as const, content: line })),
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "section-title", content: `## ${portfolio.about.strengths.title}` },
-    ];
+    showLoadingBar("about.md", () => {
+      const aboutLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat about.md` },
+        { type: "ascii", content: portfolio.about.asciiArt },
+        { type: "output", content: "" },
+        { type: "section-title", content: `## ${portfolio.about.whoAmI.title}` },
+        ...portfolio.about.whoAmI.content.map(line => ({ type: "output" as const, content: line })),
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "section-title", content: `## ${portfolio.about.coreValues.title}` },
+        ...portfolio.about.coreValues.content.map(line => ({ type: "output" as const, content: line })),
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "section-title", content: `## ${portfolio.about.strengths.title}` },
+      ];
 
-    portfolio.about.strengths.items.forEach(item => {
+      portfolio.about.strengths.items.forEach(item => {
+        aboutLines.push(
+          { type: "highlight", content: item.name },
+          { type: "output", content: item.description },
+        );
+      });
+
       aboutLines.push(
-        { type: "highlight", content: item.name },
-        { type: "output", content: item.description },
+        { type: "output", content: "" },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "section-title", content: `## ${portfolio.about.background.title}` },
+        { type: "highlight", content: `Education` },
       );
-    });
 
-    aboutLines.push(
-      { type: "output", content: "" },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "section-title", content: `## ${portfolio.about.background.title}` },
-      { type: "highlight", content: `Education` },
-    );
+      portfolio.about.background.education.forEach(edu => {
+        aboutLines.push(
+          { type: "output", content: `${edu.period} — ${edu.school}, ${edu.major}` },
+        );
+      });
 
-    portfolio.about.background.education.forEach(edu => {
       aboutLines.push(
-        { type: "output", content: `${edu.period} — ${edu.school}, ${edu.major}` },
+        { type: "output", content: "" },
+        { type: "highlight", content: `Career` },
       );
+
+      portfolio.about.background.career.forEach(career => {
+        aboutLines.push(
+          { type: "output", content: `${career.period} — ${career.company}, ${career.role}` },
+        );
+      });
+
+      addLines(aboutLines, () => setShowMenu(true));
     });
-
-    aboutLines.push(
-      { type: "output", content: "" },
-      { type: "highlight", content: `Career` },
-    );
-
-    portfolio.about.background.career.forEach(career => {
-      aboutLines.push(
-        { type: "output", content: `${career.period} — ${career.company}, ${career.role}` },
-      );
-    });
-
-    addLines(aboutLines, () => setShowMenu(true));
-  }, [addLines]);
+  }, [addLines, showLoadingBar]);
 
   const showWork = useCallback(() => {
     setCurrentSection("work");
-    const workLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat work.md` },
-      { type: "ascii", content: portfolio.work.asciiArt },
-      { type: "output", content: "" },
-      { type: "output", content: portfolio.work.description },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-    ];
-
-    portfolio.work.projects.forEach((project, index) => {
-      workLines.push(
-        { type: "highlight", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: `${project.period} | ${project.role}` },
-        { type: "output", content: project.summary },
-        { type: "system", content: `[${project.tags.join(", ")}]` },
+    showLoadingBar("work.md", () => {
+      const workLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat work.md` },
+        { type: "ascii", content: portfolio.work.asciiArt },
         { type: "output", content: "" },
+        { type: "output", content: portfolio.work.description },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+      ];
+
+      portfolio.work.projects.forEach((project, index) => {
+        workLines.push(
+          { type: "highlight", content: `${index + 1}. ${project.title}` },
+          { type: "output", content: `${project.period} | ${project.role}` },
+          { type: "output", content: project.summary },
+          { type: "system", content: `[${project.tags.join(", ")}]` },
+          { type: "output", content: "" },
+        );
+      });
+
+      workLines.push(
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "system", content: "프로젝트 번호를 입력하면 상세 내용을 볼 수 있습니다." },
       );
+
+      addLines(workLines, () => setShowMenu(true));
     });
-
-    workLines.push(
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "system", content: "프로젝트 번호를 입력하면 상세 내용을 볼 수 있습니다." },
-    );
-
-    addLines(workLines, () => setShowMenu(true));
-  }, [addLines]);
+  }, [addLines, showLoadingBar]);
 
   const showWorkDetail = useCallback((projectSlug: string) => {
     const project = portfolio.work.projects.find(p => p.slug === projectSlug);
@@ -244,103 +318,109 @@ export default function Terminal() {
     setCurrentSection("work-detail");
     setSelectedProject(projectSlug);
 
-    const detailLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat work/${project.slug}.md` },
-      { type: "output", content: "" },
-      { type: "section-title", content: `## ${project.title}` },
-      { type: "output", content: `📅 ${project.period}` },
-      { type: "output", content: `👤 ${project.role}` },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-    ];
+    showLoadingBar(`work/${project.slug}.md`, () => {
+      const detailLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat work/${project.slug}.md` },
+        { type: "output", content: "" },
+        { type: "section-title", content: `## ${project.title}` },
+        { type: "output", content: `📅 ${project.period}` },
+        { type: "output", content: `👤 ${project.role}` },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+      ];
 
-    project.description.forEach(line => {
-      detailLines.push({ type: "output", content: line });
+      project.description.forEach(line => {
+        detailLines.push({ type: "output", content: line });
+      });
+
+      detailLines.push(
+        { type: "output", content: "" },
+        { type: "output", content: `🏷️  ${project.tags.join(" · ")}` },
+      );
+
+      if (project.link) {
+        detailLines.push({ type: "output", content: `→ ${project.link} ↗` });
+      }
+
+      addLines(detailLines, () => setShowMenu(true));
     });
-
-    detailLines.push(
-      { type: "output", content: "" },
-      { type: "output", content: `🏷️  ${project.tags.join(" · ")}` },
-    );
-
-    if (project.link) {
-      detailLines.push({ type: "output", content: `→ ${project.link} ↗` });
-    }
-
-    addLines(detailLines, () => setShowMenu(true));
-  }, [addLines]);
+  }, [addLines, showLoadingBar]);
 
   const showFun = useCallback(() => {
     setCurrentSection("fun");
-    const funLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat fun.md` },
-      { type: "ascii", content: portfolio.fun.asciiArt },
-      { type: "output", content: "" },
-      { type: "output", content: portfolio.fun.description },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-    ];
+    showLoadingBar("fun.md", () => {
+      const funLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat fun.md` },
+        { type: "ascii", content: portfolio.fun.asciiArt },
+        { type: "output", content: "" },
+        { type: "output", content: portfolio.fun.description },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+      ];
 
-    portfolio.fun.projects.forEach((project, index) => {
-      funLines.push(
-        { type: "highlight", content: `${index + 1}. ${project.title}` },
-        { type: "output", content: project.summary },
-      );
-      project.description.forEach(line => {
-        funLines.push({ type: "output", content: line });
+      portfolio.fun.projects.forEach((project, index) => {
+        funLines.push(
+          { type: "highlight", content: `${index + 1}. ${project.title}` },
+          { type: "output", content: project.summary },
+        );
+        project.description.forEach(line => {
+          funLines.push({ type: "output", content: line });
+        });
+        if (project.link) {
+          funLines.push({ type: "system", content: `→ ${project.link} ↗` });
+        }
+        funLines.push({ type: "output", content: "" });
       });
-      if (project.link) {
-        funLines.push({ type: "system", content: `→ ${project.link} ↗` });
-      }
-      funLines.push({ type: "output", content: "" });
-    });
 
-    addLines(funLines, () => setShowMenu(true));
-  }, [addLines]);
+      addLines(funLines, () => setShowMenu(true));
+    });
+  }, [addLines, showLoadingBar]);
 
   const showResume = useCallback(() => {
     setCurrentSection("resume");
-    const resumeLines: TerminalLine[] = [
-      { type: "command", content: `user@portfolio:~$ cat resume.md` },
-      { type: "ascii", content: portfolio.resume.asciiArt },
-      { type: "output", content: "" },
-      { type: "section-title", content: "## Experience" },
-    ];
-
-    portfolio.resume.experience.forEach(exp => {
-      resumeLines.push(
-        { type: "output", content: `${exp.period} | ${exp.company} — ${exp.role}` },
-        { type: "output", content: exp.description },
+    showLoadingBar("resume.md", () => {
+      const resumeLines: TerminalLine[] = [
+        { type: "command", content: `user@portfolio:~$ cat resume.md` },
+        { type: "ascii", content: portfolio.resume.asciiArt },
         { type: "output", content: "" },
-      );
-    });
+        { type: "section-title", content: "## Experience" },
+      ];
 
-    resumeLines.push(
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "section-title", content: "## Education" },
-    );
+      portfolio.resume.experience.forEach(exp => {
+        resumeLines.push(
+          { type: "output", content: `${exp.period} | ${exp.company} — ${exp.role}` },
+          { type: "output", content: exp.description },
+          { type: "output", content: "" },
+        );
+      });
 
-    portfolio.resume.education.forEach(edu => {
       resumeLines.push(
-        { type: "output", content: `${edu.period} | ${edu.school} — ${edu.major}` },
-        { type: "output", content: edu.description },
-        { type: "output", content: "" },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "section-title", content: "## Education" },
       );
+
+      portfolio.resume.education.forEach(edu => {
+        resumeLines.push(
+          { type: "output", content: `${edu.period} | ${edu.school} — ${edu.major}` },
+          { type: "output", content: edu.description },
+          { type: "output", content: "" },
+        );
+      });
+
+      resumeLines.push(
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "section-title", content: "## Skills" },
+        { type: "highlight", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
+        { type: "highlight", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
+        { type: "highlight", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
+        { type: "output", content: "" },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "output", content: `📧 ${portfolio.profile.email}` },
+        { type: "output", content: `🔗 ${portfolio.profile.github}` },
+        { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
+      );
+
+      addLines(resumeLines, () => setShowMenu(true));
     });
-
-    resumeLines.push(
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "section-title", content: "## Skills" },
-      { type: "highlight", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
-      { type: "highlight", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
-      { type: "highlight", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
-      { type: "output", content: "" },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "output", content: `📧 ${portfolio.profile.email}` },
-      { type: "output", content: `🔗 ${portfolio.profile.github}` },
-      { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
-    );
-
-    addLines(resumeLines, () => setShowMenu(true));
-  }, [addLines]);
+  }, [addLines, showLoadingBar]);
 
   const handleCommand = useCallback((cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
