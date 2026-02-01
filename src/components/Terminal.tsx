@@ -589,9 +589,9 @@ export default function Terminal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black font-mono p-3">
+    <div className="fixed inset-0 bg-black font-mono">
       {/* 카드 컨테이너 */}
-      <div className="w-full h-full bg-card rounded-[24px] border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
+      <div className="absolute inset-4 bg-card rounded-[20px] border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         
         {/* 헤더 */}
         <header className="h-14 shrink-0 bg-card border-b border-border px-6 flex items-center justify-between">
