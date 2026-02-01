@@ -608,10 +608,10 @@ export default function Terminal() {
         {/* Terminal Output - Scrollable */}
         <main
           ref={terminalRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden"
+          className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="px-5 py-6 space-y-0.5">
+          <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
             <div ref={bottomRef} />
           </div>
@@ -619,8 +619,8 @@ export default function Terminal() {
 
         {/* Menu - Full Width */}
         {showMenu && !isTyping && (
-          <nav className="shrink-0 border-t border-border bg-card/50">
-            <div className="px-5 py-3">
+          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
+            <div className="w-full max-w-3xl px-6 py-3">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {MENU_ITEMS.map((item) => (
                   <button
@@ -637,8 +637,8 @@ export default function Terminal() {
         )}
 
         {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card/80 border-t border-border">
-          <div className="px-5 py-3">
+        <footer className="shrink-0 bg-card/80 border-t border-border flex justify-center">
+          <div className="w-full max-w-3xl px-6 py-3">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
               <input
