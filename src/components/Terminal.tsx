@@ -608,10 +608,10 @@ export default function Terminal() {
         {/* Terminal Output - Scrollable */}
         <main
           ref={terminalRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden"
+          className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="max-w-3xl mx-auto px-6 py-8 space-y-0.5">
+          <div className="w-full max-w-3xl px-6 py-8 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
             <div ref={bottomRef} />
           </div>
@@ -619,8 +619,8 @@ export default function Terminal() {
 
         {/* Menu - Full Width */}
         {showMenu && !isTyping && (
-          <nav className="shrink-0 border-t border-border bg-card/50">
-            <div className="max-w-3xl mx-auto px-6 py-4">
+          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
+            <div className="w-full max-w-3xl px-6 py-4">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {MENU_ITEMS.map((item) => (
                   <button
@@ -637,25 +637,23 @@ export default function Terminal() {
         )}
 
         {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card border-t border-border">
-          <div className="px-6 py-5">
-            <div className="max-w-3xl mx-auto">
-              <form onSubmit={handleSubmit} className="flex items-center gap-3">
-                <span className="text-accent select-none">&gt;</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={isTyping || isLoading}
-                  placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
-                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
-              </form>
-            </div>
+        <footer className="shrink-0 bg-card border-t border-border flex justify-center">
+          <div className="w-full max-w-3xl px-6 py-5">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <span className="text-accent select-none">&gt;</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={isTyping || isLoading}
+                placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+            </form>
           </div>
         </footer>
       </div>
