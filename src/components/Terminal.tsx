@@ -592,7 +592,7 @@ export default function Terminal() {
     <div className="h-screen bg-background flex flex-col font-mono overflow-hidden">
       {/* Status Bar - Full Width */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
-        <div className="px-8 py-4 flex justify-between items-center">
+        <div className="px-10 py-6 flex justify-between items-center">
           <span className="text-foreground font-medium text-base">
             <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
           </span>
@@ -639,7 +639,7 @@ export default function Terminal() {
 
           {/* Input */}
           <footer className="sticky bottom-0 bg-background border-t border-border">
-            <div className="px-6 py-6">
+            <div className="px-6 py-8">
               <form onSubmit={handleSubmit} className="flex items-center gap-3">
                 <span className="text-accent select-none">&gt;</span>
                 <input
