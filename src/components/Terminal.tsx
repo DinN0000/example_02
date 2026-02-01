@@ -544,7 +544,7 @@ export default function Terminal() {
         );
       case "ascii":
         return (
-          <pre key={index} className={`text-accent/80 text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto ${asciiAnimation}`}>
+          <pre key={index} className={`text-accent/80 text-xs sm:text-sm leading-none whitespace-pre overflow-x-auto ${asciiAnimation}`}>
             {line.content}
           </pre>
         );
