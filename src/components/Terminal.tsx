@@ -592,20 +592,12 @@ export default function Terminal() {
     <div className="h-screen bg-background flex items-center justify-center font-mono p-4">
       {/* Main Container with rounded border */}
       <div className="w-full h-full bg-card rounded-xl border border-border overflow-hidden flex flex-col">
-        {/* Title Bar - macOS style */}
+        {/* Title Bar */}
         <header className="shrink-0 bg-card/80 border-b border-border">
-          <div className="px-5 py-3 flex items-center gap-4">
-            {/* Window Controls */}
-            <div className="flex gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
-              <span className="w-3 h-3 rounded-full bg-[#febc2e]"></span>
-              <span className="w-3 h-3 rounded-full bg-[#28c840]"></span>
-            </div>
-            {/* Title */}
-            <span className="text-muted text-sm flex-1 text-center">
+          <div className="px-5 py-3 flex justify-between items-center">
+            <span className="text-muted text-sm">
               {portfolio.profile.name} — portfolio
             </span>
-            {/* Stats */}
             <div className="flex gap-4 text-muted text-xs">
               <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
               <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
@@ -616,10 +608,10 @@ export default function Terminal() {
         {/* Terminal Output - Scrollable */}
         <main
           ref={terminalRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
+          className="flex-1 overflow-y-auto overflow-x-hidden"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="w-full max-w-3xl px-6 py-8 space-y-0.5">
+          <div className="px-5 py-6 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
             <div ref={bottomRef} />
           </div>
@@ -627,8 +619,8 @@ export default function Terminal() {
 
         {/* Menu - Full Width */}
         {showMenu && !isTyping && (
-          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
-            <div className="w-full max-w-3xl px-6 py-4">
+          <nav className="shrink-0 border-t border-border bg-card/50">
+            <div className="px-5 py-3">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {MENU_ITEMS.map((item) => (
                   <button
@@ -646,24 +638,22 @@ export default function Terminal() {
 
         {/* Input Footer - Full Width */}
         <footer className="shrink-0 bg-card/80 border-t border-border">
-          <div className="px-5 py-3 flex justify-center">
-            <div className="w-full max-w-3xl">
-              <form onSubmit={handleSubmit} className="flex items-center gap-3">
-                <span className="text-accent select-none">&gt;</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={isTyping || isLoading}
-                  placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
-                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
-              </form>
-            </div>
+          <div className="px-5 py-3">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <span className="text-accent select-none">&gt;</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={isTyping || isLoading}
+                placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+            </form>
           </div>
         </footer>
       </div>
