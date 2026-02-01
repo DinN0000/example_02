@@ -645,23 +645,25 @@ export default function Terminal() {
         )}
 
         {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card border-t border-border flex justify-center">
-          <div className="w-full max-w-3xl px-6 py-5">
-            <form onSubmit={handleSubmit} className="flex items-center gap-3">
-              <span className="text-accent select-none">&gt;</span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={isTyping || isLoading}
-                placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
-                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
-                autoComplete="off"
-                spellCheck={false}
-              />
-              <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
-            </form>
+        <footer className="shrink-0 bg-card/80 border-t border-border">
+          <div className="px-5 py-3 flex justify-center">
+            <div className="w-full max-w-3xl">
+              <form onSubmit={handleSubmit} className="flex items-center gap-3">
+                <span className="text-accent select-none">&gt;</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isTyping || isLoading}
+                  placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+              </form>
+            </div>
           </div>
         </footer>
       </div>
