@@ -453,9 +453,9 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-mono">
+    <div className="min-h-screen bg-background flex flex-col items-center font-mono">
       {/* Status Bar */}
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
+      <header className="sticky top-0 z-10 w-full bg-card/95 backdrop-blur border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-3 flex justify-between items-center text-sm">
           <span className="text-foreground">
             {portfolio.profile.name} — <span className="text-muted">portfolio</span>
@@ -470,7 +470,7 @@ export default function Terminal() {
       {/* Terminal Output */}
       <main
         ref={terminalRef}
-        className="flex-1 overflow-y-auto"
+        className="flex-1 w-full overflow-y-auto"
         onClick={() => inputRef.current?.focus()}
       >
         <div className="max-w-4xl mx-auto px-6 py-8 space-y-0.5">
@@ -480,7 +480,7 @@ export default function Terminal() {
 
       {/* Menu */}
       {showMenu && !isTyping && (
-        <nav className="border-t border-border bg-card/50">
+        <nav className="w-full border-t border-border bg-card/50">
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {MENU_ITEMS.map((item) => (
@@ -498,7 +498,7 @@ export default function Terminal() {
       )}
 
       {/* Input */}
-      <footer className="sticky bottom-0 bg-background border-t border-border">
+      <footer className="sticky bottom-0 w-full bg-background border-t border-border">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <form onSubmit={handleSubmit} className="flex items-center gap-3">
             <span className="text-accent select-none">&gt;</span>
