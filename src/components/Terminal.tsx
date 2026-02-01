@@ -589,9 +589,9 @@ export default function Terminal() {
   };
 
   return (
-    <div className="h-screen bg-background flex items-center justify-center font-mono p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center font-mono p-6">
       {/* Main Container with rounded border */}
-      <div className="w-full h-full bg-card rounded-xl border border-border overflow-hidden flex flex-col">
+      <div className="w-full max-h-[calc(100vh-3rem)] h-[calc(100vh-3rem)] bg-card rounded-2xl border border-border overflow-hidden flex flex-col shadow-2xl">
         {/* Title Bar */}
         <header className="shrink-0 bg-card/80 border-b border-border">
           <div className="px-5 py-3 flex justify-between items-center">
