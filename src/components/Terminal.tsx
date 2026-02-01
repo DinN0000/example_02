@@ -589,59 +589,57 @@ export default function Terminal() {
   };
 
   return (
-    <div className="h-screen bg-background flex items-center justify-center font-mono p-2">
+    <div className="h-screen bg-background flex items-center justify-center font-mono p-4">
       {/* Main Container with rounded border */}
-      <div className="w-full h-full bg-card rounded-lg border border-border overflow-hidden flex flex-col">
-        {/* Status Bar - Full Width */}
-        <header className="bg-card/95 backdrop-blur border-b border-border">
-          <div className="px-10 py-8 flex justify-between items-center">
-            <span className="text-foreground font-medium text-base">
+      <div className="w-full h-full bg-card rounded-xl border border-border overflow-hidden flex flex-col">
+        {/* Title Bar - Full Width */}
+        <header className="shrink-0 bg-card border-b border-border">
+          <div className="px-6 py-5 flex justify-between items-center">
+            <span className="text-foreground font-medium">
               <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
             </span>
-            <div className="flex gap-8 text-muted">
+            <div className="flex gap-6 text-muted text-sm">
               <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
               <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
             </div>
           </div>
         </header>
 
-        {/* Content Area - Centered */}
-        <div className="flex-1 flex justify-center overflow-hidden">
-          <div className="w-full max-w-3xl flex flex-col h-full">
-          {/* Terminal Output */}
-          <main
-            ref={terminalRef}
-            className="flex-1 overflow-y-auto"
-            onClick={() => inputRef.current?.focus()}
-          >
-            <div className="px-6 py-8 space-y-0.5">
-              {lines.map((line, index) => renderLine(line, index))}
-              <div ref={bottomRef} />
-            </div>
-          </main>
+        {/* Terminal Output - Scrollable */}
+        <main
+          ref={terminalRef}
+          className="flex-1 overflow-y-auto overflow-x-hidden"
+          onClick={() => inputRef.current?.focus()}
+        >
+          <div className="max-w-3xl mx-auto px-6 py-8 space-y-0.5">
+            {lines.map((line, index) => renderLine(line, index))}
+            <div ref={bottomRef} />
+          </div>
+        </main>
 
-          {/* Menu */}
-          {showMenu && !isTyping && (
-            <nav className="border-t border-border bg-card/50">
-              <div className="px-6 py-4">
-                <div className="flex flex-wrap gap-x-6 gap-y-2">
-                  {MENU_ITEMS.map((item) => (
-                    <button
-                      key={item.key}
-                      onClick={() => handleMenuClick(item.cmd)}
-                      className="text-muted hover:text-accent transition-colors"
-                    >
-                      <span className="text-accent">[{item.key}]</span> {item.label}
-                    </button>
-                  ))}
-                </div>
+        {/* Menu - Full Width */}
+        {showMenu && !isTyping && (
+          <nav className="shrink-0 border-t border-border bg-card/50">
+            <div className="max-w-3xl mx-auto px-6 py-4">
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                {MENU_ITEMS.map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => handleMenuClick(item.cmd)}
+                    className="text-muted hover:text-accent transition-colors"
+                  >
+                    <span className="text-accent">[{item.key}]</span> {item.label}
+                  </button>
+                ))}
               </div>
-            </nav>
-          )}
+            </div>
+          </nav>
+        )}
 
-          {/* Input */}
-          <footer className="bg-card border-t border-border">
-            <div className="px-6 py-10">
+        {/* Input Footer - Full Width */}
+        <footer className="shrink-0 bg-card border-t border-border">
+          <div className="px-6 py-5">
+            <div className="max-w-3xl mx-auto">
               <form onSubmit={handleSubmit} className="flex items-center gap-3">
                 <span className="text-accent select-none">&gt;</span>
                 <input
@@ -658,9 +656,8 @@ export default function Terminal() {
                 <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
               </form>
             </div>
-          </footer>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );
