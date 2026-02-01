@@ -594,13 +594,15 @@ export default function Terminal() {
       <div className="absolute inset-3 bg-card rounded-2xl border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         
         {/* 헤더 */}
-        <header className="h-14 shrink-0 bg-card border-b border-border px-6 flex items-center justify-between">
-          <span className="text-muted text-sm">
-            {portfolio.profile.name} — portfolio
-          </span>
-          <div className="flex gap-4 text-muted text-xs">
-            <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
-            <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+        <header className="h-14 shrink-0 bg-card border-b border-border flex items-center justify-center">
+          <div className="w-full max-w-3xl px-6 flex items-center justify-between">
+            <span className="text-muted text-sm">
+              {portfolio.profile.name} — portfolio
+            </span>
+            <div className="flex gap-4 text-muted text-xs">
+              <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
+              <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+            </div>
           </div>
         </header>
 
