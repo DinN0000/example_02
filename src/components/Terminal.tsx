@@ -453,10 +453,11 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center font-mono">
+    <div className="min-h-screen bg-background flex justify-center font-mono">
+      <div className="w-full max-w-4xl flex flex-col">
       {/* Status Bar */}
-      <header className="sticky top-0 z-10 w-full bg-card/95 backdrop-blur border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex justify-between items-center text-sm">
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
+        <div className="px-6 py-3 flex justify-between items-center text-sm">
           <span className="text-foreground">
             {portfolio.profile.name} — <span className="text-muted">portfolio</span>
           </span>
@@ -470,18 +471,18 @@ export default function Terminal() {
       {/* Terminal Output */}
       <main
         ref={terminalRef}
-        className="flex-1 w-full overflow-y-auto"
+        className="flex-1 overflow-y-auto"
         onClick={() => inputRef.current?.focus()}
       >
-        <div className="max-w-4xl mx-auto px-6 py-8 space-y-0.5">
+        <div className="px-6 py-8 space-y-0.5">
           {lines.map((line, index) => renderLine(line, index))}
         </div>
       </main>
 
       {/* Menu */}
       {showMenu && !isTyping && (
-        <nav className="w-full border-t border-border bg-card/50">
-          <div className="max-w-4xl mx-auto px-6 py-4">
+        <nav className="border-t border-border bg-card/50">
+          <div className="px-6 py-4">
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {MENU_ITEMS.map((item) => (
                 <button
@@ -498,8 +499,8 @@ export default function Terminal() {
       )}
 
       {/* Input */}
-      <footer className="sticky bottom-0 w-full bg-background border-t border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+      <footer className="sticky bottom-0 bg-background border-t border-border">
+        <div className="px-6 py-4">
           <form onSubmit={handleSubmit} className="flex items-center gap-3">
             <span className="text-accent select-none">&gt;</span>
             <input
@@ -517,6 +518,7 @@ export default function Terminal() {
           </form>
         </div>
       </footer>
+      </div>
     </div>
   );
 }
