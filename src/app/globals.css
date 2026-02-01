@@ -85,6 +85,30 @@ a:hover {
   }
 }
 
+@keyframes typeReveal {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes asciiReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -100,6 +124,16 @@ a:hover {
 
 .fade-in {
   animation: fadeIn 0.3s ease-out;
+}
+
+.type-reveal {
+  animation: typeReveal 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.ascii-reveal {
+  animation: asciiReveal 0.2s ease-out forwards;
+  opacity: 0;
 }
 
 .pulse {

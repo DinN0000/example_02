@@ -80,13 +80,43 @@ export default function Terminal() {
     setShowMenu(false);
     let index = 0;
 
+    const getDelay = (line: TerminalLine, nextLine?: TerminalLine): number => {
+      const type = line?.type;
+      const nextType = nextLine?.type;
+      
+      // ASCII art: faster but still smooth
+      if (type === "ascii") return 25;
+      
+      // Commands feel snappy
+      if (type === "command") return 50;
+      
+      // System messages: quick
+      if (type === "system") return 45;
+      
+      // Dividers: slight pause before/after
+      if (type === "divider") return 80;
+      
+      // Empty lines: quick
+      if (!line?.content || line.content === "" || line.content === "\u00A0") return 30;
+      
+      // If next line is same type, keep rhythm
+      if (nextType === type) return 55;
+      
+      // Content lines: natural typing pace based on length
+      const contentLength = line?.content?.length || 0;
+      const baseDelay = 60;
+      const lengthBonus = Math.min(contentLength * 0.5, 40);
+      
+      return baseDelay + lengthBonus;
+    };
+
     const addNextLine = () => {
       if (index < newLines.length) {
         const currentLine = newLines[index];
-        const currentType = currentLine?.type;
+        const nextLine = newLines[index + 1];
         setLines(prev => [...prev, currentLine]);
         index++;
-        const delay = currentType === "ascii" ? 5 : 40;
+        const delay = getDelay(currentLine, nextLine);
         setTimeout(addNextLine, delay);
       } else {
         setIsTyping(false);
@@ -412,40 +442,44 @@ export default function Terminal() {
 
   const renderLine = (line: TerminalLine, index: number) => {
     if (!line) return null;
+    
+    const baseAnimation = "type-reveal";
+    const asciiAnimation = "ascii-reveal";
+    
     switch (line.type) {
       case "command":
         return (
-          <div key={index} className="text-accent font-medium">
+          <div key={index} className={`text-accent font-medium ${baseAnimation}`}>
             {line.content}
           </div>
         );
       case "ascii":
         return (
-          <pre key={index} className="text-accent text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto">
+          <pre key={index} className={`text-accent text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto ${asciiAnimation}`}>
             {line.content}
           </pre>
         );
       case "system":
         return (
-          <div key={index} className="text-muted text-sm">
+          <div key={index} className={`text-muted text-sm ${baseAnimation}`}>
             {line.content}
           </div>
         );
       case "divider":
         return (
-          <div key={index} className="text-border select-none">
+          <div key={index} className={`text-border select-none ${baseAnimation}`}>
             {line.content}
           </div>
         );
       case "menu":
         return (
-          <div key={index} className="text-accent">
+          <div key={index} className={`text-accent ${baseAnimation}`}>
             {line.content}
           </div>
         );
       default:
         return (
-          <div key={index} className="text-foreground">
+          <div key={index} className={`text-foreground ${baseAnimation}`}>
             {line.content || "\u00A0"}
           </div>
         );
