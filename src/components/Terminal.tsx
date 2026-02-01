@@ -6,7 +6,7 @@ import { portfolio } from "@/data/portfolio";
 type Section = "intro" | "home" | "work" | "work-detail" | "fun" | "fun-detail" | "resume";
 
 interface TerminalLine {
-  type: "command" | "output" | "ascii" | "system" | "menu" | "divider";
+  type: "command" | "output" | "ascii" | "system" | "menu" | "divider" | "section-title" | "highlight";
   content: string;
 }
 
@@ -133,15 +133,15 @@ export default function Terminal() {
     const homeLines: TerminalLine[] = [
       { type: "command", content: `user@portfolio:~$ cat home.md` },
       { type: "output", content: "" },
-      { type: "output", content: `✱` },
-      { type: "output", content: portfolio.home.tagline },
+      { type: "highlight", content: `✱` },
+      { type: "section-title", content: `## ${portfolio.home.tagline}` },
       { type: "ascii", content: portfolio.home.asciiArt },
       { type: "output", content: "" },
       ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      ...portfolio.home.highlights.map(line => ({ type: "output" as const, content: line })),
+      ...portfolio.home.highlights.map(line => ({ type: "highlight" as const, content: line })),
       { type: "output", content: "" },
       { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
     ];
@@ -167,19 +167,19 @@ export default function Terminal() {
       { type: "command", content: `user@portfolio:~$ cat about.md` },
       { type: "ascii", content: portfolio.about.asciiArt },
       { type: "output", content: "" },
-      { type: "output", content: `## ${portfolio.about.whoAmI.title}` },
+      { type: "section-title", content: `## ${portfolio.about.whoAmI.title}` },
       { type: "output", content: "" },
       ...portfolio.about.whoAmI.content.map(line => ({ type: "output" as const, content: line })),
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      { type: "output", content: `## ${portfolio.about.coreValues.title}` },
+      { type: "section-title", content: `## ${portfolio.about.coreValues.title}` },
       { type: "output", content: "" },
       ...portfolio.about.coreValues.content.map(line => ({ type: "output" as const, content: line })),
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      { type: "output", content: `## ${portfolio.about.strengths.title}` },
+      { type: "section-title", content: `## ${portfolio.about.strengths.title}` },
       { type: "output", content: "" },
     ];
 
@@ -196,9 +196,9 @@ export default function Terminal() {
     aboutLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      { type: "output", content: `## ${portfolio.about.background.title}` },
+      { type: "section-title", content: `## ${portfolio.about.background.title}` },
       { type: "output", content: "" },
-      { type: "output", content: `Education` },
+      { type: "highlight", content: `Education` },
       { type: "output", content: "" },
     );
 
@@ -210,7 +210,7 @@ export default function Terminal() {
 
     aboutLines.push(
       { type: "output", content: "" },
-      { type: "output", content: `Career` },
+      { type: "highlight", content: `Career` },
       { type: "output", content: "" },
     );
 
@@ -238,13 +238,13 @@ export default function Terminal() {
     portfolio.work.projects.forEach((project, index) => {
       workLines.push(
         { type: "output", content: `●` },
-        { type: "output", content: `${index + 1}. ${project.title}` },
+        { type: "highlight", content: `${index + 1}. ${project.title}` },
         { type: "output", content: `●` },
         { type: "output", content: `${project.period} | ${project.role}` },
         { type: "output", content: `●` },
         { type: "output", content: project.summary },
         { type: "output", content: `●` },
-        { type: "output", content: `[${project.tags.join(", ")}]` },
+        { type: "system", content: `[${project.tags.join(", ")}]` },
         { type: "output", content: "" },
       );
     });
@@ -268,7 +268,7 @@ export default function Terminal() {
     const detailLines: TerminalLine[] = [
       { type: "command", content: `user@portfolio:~$ cat work/${project.slug}.md` },
       { type: "output", content: "" },
-      { type: "output", content: `# ${project.title}` },
+      { type: "section-title", content: `## ${project.title}` },
       { type: "output", content: "" },
       { type: "output", content: `●` },
       { type: "output", content: `📅 ${project.period}` },
@@ -317,7 +317,7 @@ export default function Terminal() {
     portfolio.fun.projects.forEach((project, index) => {
       funLines.push(
         { type: "output", content: `●` },
-        { type: "output", content: `${index + 1}. ${project.title}` },
+        { type: "highlight", content: `${index + 1}. ${project.title}` },
         { type: "output", content: `●` },
         { type: "output", content: project.summary },
       );
@@ -330,7 +330,7 @@ export default function Terminal() {
       if (project.link) {
         funLines.push(
           { type: "output", content: `●` },
-          { type: "output", content: `→ ${project.link} ↗` },
+          { type: "system", content: `→ ${project.link} ↗` },
         );
       }
       funLines.push({ type: "output", content: "" });
@@ -345,7 +345,7 @@ export default function Terminal() {
       { type: "command", content: `user@portfolio:~$ cat resume.md` },
       { type: "ascii", content: portfolio.resume.asciiArt },
       { type: "output", content: "" },
-      { type: "output", content: "## Experience" },
+      { type: "section-title", content: "## Experience" },
       { type: "output", content: "" },
     ];
 
@@ -364,7 +364,7 @@ export default function Terminal() {
     resumeLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      { type: "output", content: "## Education" },
+      { type: "section-title", content: "## Education" },
       { type: "output", content: "" },
     );
 
@@ -383,14 +383,14 @@ export default function Terminal() {
     resumeLines.push(
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
-      { type: "output", content: "## Skills" },
+      { type: "section-title", content: "## Skills" },
       { type: "output", content: "" },
       { type: "output", content: `●` },
-      { type: "output", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
+      { type: "highlight", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
       { type: "output", content: `●` },
-      { type: "output", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
+      { type: "highlight", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
       { type: "output", content: `●` },
-      { type: "output", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
+      { type: "highlight", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
       { type: "output", content: "" },
       { type: "divider", content: "──────────────────────────────────────────────────" },
       { type: "output", content: "" },
@@ -525,7 +525,7 @@ export default function Terminal() {
         );
       case "ascii":
         return (
-          <pre key={index} className={`text-accent text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto ${asciiAnimation}`}>
+          <pre key={index} className={`text-accent/80 text-[10px] sm:text-xs leading-none whitespace-pre overflow-x-auto ${asciiAnimation}`}>
             {line.content}
           </pre>
         );
@@ -537,13 +537,26 @@ export default function Terminal() {
         );
       case "divider":
         return (
-          <div key={index} className={`text-border select-none ${baseAnimation}`}>
+          <div key={index} className={`text-border/60 select-none ${baseAnimation}`}>
             {line.content}
           </div>
         );
       case "menu":
         return (
           <div key={index} className={`text-accent ${baseAnimation}`}>
+            {line.content}
+          </div>
+        );
+      case "section-title":
+        return (
+          <div key={index} className={`text-section-title font-semibold text-lg mt-2 ${baseAnimation}`}>
+            <span className="text-highlight-orange mr-2">##</span>
+            {line.content.replace(/^##\s*/, '')}
+          </div>
+        );
+      case "highlight":
+        return (
+          <div key={index} className={`text-highlight-cyan ${baseAnimation}`}>
             {line.content}
           </div>
         );
@@ -562,12 +575,12 @@ export default function Terminal() {
       {/* Status Bar */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
         <div className="px-6 py-3 flex justify-between items-center text-sm">
-          <span className="text-foreground">
-            {portfolio.profile.name} — <span className="text-muted">portfolio</span>
+          <span className="text-foreground font-medium">
+            <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
           </span>
           <div className="flex gap-6 text-muted">
-            <span>PROJECTS: <span className="text-accent">{portfolio.metrics.projects}</span></span>
-            <span>EXP: <span className="text-accent">{portfolio.metrics.exp}</span></span>
+            <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
+            <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
           </div>
         </div>
       </header>
