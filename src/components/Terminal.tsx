@@ -589,12 +589,12 @@ export default function Terminal() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black font-mono p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen w-full bg-black font-mono p-3 sm:p-5 md:p-6">
       {/* 카드 컨테이너 */}
-      <div className="mx-auto h-[calc(100vh-2rem)] sm:h-[calc(100vh-3rem)] md:h-[calc(100vh-4rem)] max-w-5xl bg-card rounded-2xl border border-border overflow-hidden flex flex-col">
+      <div className="mx-auto h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2.5rem)] md:h-[calc(100vh-3rem)] max-w-[95%] lg:max-w-[92%] bg-card rounded-xl md:rounded-2xl border border-border overflow-hidden flex flex-col">
         
-        {/* 헤더 - 고정 높이 56px */}
-        <header className="h-14 shrink-0 bg-card border-b border-border px-6 flex items-center justify-between">
+        {/* 헤더 - 고정 높이 */}
+        <header className="h-14 md:h-16 lg:h-18 shrink-0 bg-card border-b border-border px-6 flex items-center justify-between">
           <span className="text-muted text-sm">
             {portfolio.profile.name} — portfolio
           </span>
@@ -635,8 +635,8 @@ export default function Terminal() {
           </nav>
         )}
 
-        {/* 푸터 - 고정 높이 56px */}
-        <footer className="h-14 shrink-0 bg-card border-t border-border px-6 flex items-center">
+        {/* 푸터 - 고정 높이 */}
+        <footer className="h-14 md:h-16 lg:h-18 shrink-0 bg-card border-t border-border px-6 flex items-center">
           <div className="max-w-3xl mx-auto w-full">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
