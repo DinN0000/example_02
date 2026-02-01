@@ -589,38 +589,37 @@ export default function Terminal() {
   };
 
   return (
-    <div className="h-screen w-screen bg-black flex items-center justify-center font-mono px-8 py-6">
-      {/* Main Container with rounded border */}
-      <div className="w-full h-full max-w-[calc(100vw-4rem)] max-h-[calc(100vh-3rem)] bg-card rounded-xl border border-border overflow-hidden flex flex-col">
-        {/* Title Bar */}
-        <header className="shrink-0 bg-card border-b border-border min-h-[50px] flex items-center">
-          <div className="px-6 w-full flex justify-between items-center">
-            <span className="text-muted text-sm">
-              {portfolio.profile.name} — portfolio
-            </span>
-            <div className="flex gap-4 text-muted text-xs">
-              <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
-              <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
-            </div>
+    <div className="min-h-screen w-full bg-black font-mono p-4 sm:p-6 md:p-8">
+      {/* 카드 컨테이너 */}
+      <div className="mx-auto h-[calc(100vh-2rem)] sm:h-[calc(100vh-3rem)] md:h-[calc(100vh-4rem)] max-w-5xl bg-card rounded-2xl border border-border overflow-hidden flex flex-col">
+        
+        {/* 헤더 - 고정 높이 56px */}
+        <header className="h-14 shrink-0 bg-card border-b border-border px-6 flex items-center justify-between">
+          <span className="text-muted text-sm">
+            {portfolio.profile.name} — portfolio
+          </span>
+          <div className="flex gap-4 text-muted text-xs">
+            <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
+            <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
           </div>
         </header>
 
-        {/* Terminal Output - Scrollable */}
+        {/* 콘텐츠 - 스크롤 가능 */}
         <main
           ref={terminalRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
+          className="flex-1 overflow-y-auto overflow-x-hidden"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
+          <div className="max-w-3xl mx-auto px-6 py-6 space-y-0.5">
             {lines.map((line, index) => renderLine(line, index))}
             <div ref={bottomRef} />
           </div>
         </main>
 
-        {/* Menu - Full Width */}
+        {/* 메뉴 */}
         {showMenu && !isTyping && (
-          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
-            <div className="w-full max-w-3xl px-6 py-3">
+          <nav className="shrink-0 border-t border-border bg-card/50">
+            <div className="max-w-3xl mx-auto px-6 py-3">
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {MENU_ITEMS.map((item) => (
                   <button
@@ -636,9 +635,9 @@ export default function Terminal() {
           </nav>
         )}
 
-        {/* Input Footer - Full Width */}
-        <footer className="shrink-0 bg-card border-t border-border min-h-[50px] flex items-center justify-center">
-          <div className="w-full max-w-3xl px-6">
+        {/* 푸터 - 고정 높이 56px */}
+        <footer className="h-14 shrink-0 bg-card border-t border-border px-6 flex items-center">
+          <div className="max-w-3xl mx-auto w-full">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none">&gt;</span>
               <input
