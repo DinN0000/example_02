@@ -589,72 +589,75 @@ export default function Terminal() {
   };
 
   return (
-    <div className="h-screen bg-background flex justify-center font-mono overflow-hidden">
-      <div className="w-full max-w-3xl flex flex-col h-full">
-      {/* Status Bar */}
+    <div className="h-screen bg-background flex flex-col font-mono overflow-hidden">
+      {/* Status Bar - Full Width */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border">
-        <div className="px-6 py-3 flex justify-between items-center text-sm">
-          <span className="text-foreground font-medium">
+        <div className="px-8 py-4 flex justify-between items-center">
+          <span className="text-foreground font-medium text-base">
             <span className="text-accent">●</span> {portfolio.profile.name} — <span className="text-muted">portfolio</span>
           </span>
-          <div className="flex gap-6 text-muted">
+          <div className="flex gap-8 text-muted">
             <span>PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
             <span>EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
           </div>
         </div>
       </header>
 
-      {/* Terminal Output */}
-      <main
-        ref={terminalRef}
-        className="flex-1 overflow-y-auto"
-        onClick={() => inputRef.current?.focus()}
-      >
-        <div className="px-6 py-8 space-y-0.5">
-          {lines.map((line, index) => renderLine(line, index))}
-          <div ref={bottomRef} />
-        </div>
-      </main>
-
-      {/* Menu */}
-      {showMenu && !isTyping && (
-        <nav className="border-t border-border bg-card/50">
-          <div className="px-6 py-4">
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              {MENU_ITEMS.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => handleMenuClick(item.cmd)}
-                  className="text-muted hover:text-accent transition-colors"
-                >
-                  <span className="text-accent">[{item.key}]</span> {item.label}
-                </button>
-              ))}
+      {/* Content Area - Centered */}
+      <div className="flex-1 flex justify-center overflow-hidden">
+        <div className="w-full max-w-3xl flex flex-col h-full">
+          {/* Terminal Output */}
+          <main
+            ref={terminalRef}
+            className="flex-1 overflow-y-auto"
+            onClick={() => inputRef.current?.focus()}
+          >
+            <div className="px-6 py-8 space-y-0.5">
+              {lines.map((line, index) => renderLine(line, index))}
+              <div ref={bottomRef} />
             </div>
-          </div>
-        </nav>
-      )}
+          </main>
 
-      {/* Input */}
-      <footer className="sticky bottom-0 bg-background border-t border-border">
-        <div className="px-6 py-4">
-          <form onSubmit={handleSubmit} className="flex items-center gap-3">
-            <span className="text-accent select-none">&gt;</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={isTyping || isLoading}
-              placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
-              className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
-          </form>
+          {/* Menu */}
+          {showMenu && !isTyping && (
+            <nav className="border-t border-border bg-card/50">
+              <div className="px-6 py-4">
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  {MENU_ITEMS.map((item) => (
+                    <button
+                      key={item.key}
+                      onClick={() => handleMenuClick(item.cmd)}
+                      className="text-muted hover:text-accent transition-colors"
+                    >
+                      <span className="text-accent">[{item.key}]</span> {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </nav>
+          )}
+
+          {/* Input */}
+          <footer className="sticky bottom-0 bg-background border-t border-border">
+            <div className="px-6 py-6">
+              <form onSubmit={handleSubmit} className="flex items-center gap-3">
+                <span className="text-accent select-none">&gt;</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isTyping || isLoading}
+                  placeholder={isLoading ? "thinking..." : "명령어를 입력하세요..."}
+                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+              </form>
+            </div>
+          </footer>
         </div>
-      </footer>
       </div>
     </div>
   );
