@@ -31,10 +31,8 @@ export default function Terminal() {
 
   const scrollToBottom = useCallback(() => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTo({
-        top: terminalRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+      // Instant scroll to follow content in real-time
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, []);
 
