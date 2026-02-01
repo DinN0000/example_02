@@ -406,6 +406,7 @@ export default function Terminal() {
       resumeLines.push(
         { type: "divider", content: "──────────────────────────────────────────────────" },
         { type: "section-title", content: "## Skills" },
+        { type: "highlight", content: `AI: ${portfolio.resume.skills.ai.join(" · ")}` },
         { type: "highlight", content: `Product: ${portfolio.resume.skills.product.join(" · ")}` },
         { type: "highlight", content: `Tools: ${portfolio.resume.skills.tools.join(" · ")}` },
         { type: "highlight", content: `Domain: ${portfolio.resume.skills.domain.join(" · ")}` },
