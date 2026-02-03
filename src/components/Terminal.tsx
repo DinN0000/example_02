@@ -29,6 +29,7 @@ export default function Terminal() {
   const [currentTime, setCurrentTime] = useState<string>("");
   const [showPressEnter, setShowPressEnter] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -725,18 +726,25 @@ export default function Terminal() {
           <div className="w-full max-w-3xl px-6">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none glow-cyan">&gt;</span>
+              {!isFocused && !input && (
+                <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+              )}
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
                 disabled={isTyping || isLoading}
                 placeholder={
-                  showPressEnter 
-                    ? "Enter를 눌러 계속하세요..." 
-                    : isLoading 
-                      ? "thinking..." 
-                      : "명령어를 입력하세요..."
+                  isFocused
+                    ? (showPressEnter 
+                        ? "Enter를 눌러 계속하세요..." 
+                        : isLoading 
+                          ? "thinking..." 
+                          : "명령어를 입력하세요...")
+                    : ""
                 }
                 className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-base sm:text-sm text-left"
                 style={{ direction: 'ltr', textAlign: 'left', unicodeBidi: 'plaintext' }}
@@ -744,7 +752,6 @@ export default function Terminal() {
                 autoComplete="off"
                 spellCheck={false}
               />
-{/* cursor removed */}
             </form>
           </div>
         </footer>
