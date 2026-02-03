@@ -730,7 +730,7 @@ export default function Terminal() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                disabled={isTyping || isLoading || showPressEnter}
+                disabled={isTyping || isLoading}
                 placeholder={
                   showPressEnter 
                     ? "Enter를 눌러 계속하세요..." 
