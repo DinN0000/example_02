@@ -242,7 +242,17 @@ export default function Terminal() {
       { type: "system", content: `$ ssh visitor@portfolio.dev` },
       { type: "system", content: "Connecting to portfolio.dev..." },
       { type: "system", content: "✓ Connection established" },
-      { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
+      { type: "output", content: "" },
+      { type: "section-title", content: "## Welcome" },
+      { type: "output", content: "" },
+      { type: "highlight", content: `${portfolio.profile.name} (${portfolio.profile.nameEn})` },
+      { type: "system", content: `${portfolio.profile.role} · ${portfolio.metrics.exp} experience` },
+      { type: "output", content: "" },
+      { type: "output", content: "터미널 스타일의 인터랙티브 포트폴리오입니다." },
+      { type: "output", content: "메뉴에서 선택하거나 자유롭게 질문하세요." },
+      { type: "output", content: "" },
+      { type: "divider", content: "──────────────────────────────────────────────────" },
+      { type: "system", content: "[0] home  [1] about  [2] work  [3] fun  [4] resume" },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
