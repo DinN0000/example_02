@@ -1,8 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { portfolio } from "@/data/portfolio";
 import { NextRequest, NextResponse } from "next/server";
-
-const anthropic = new Anthropic();
 
 // Rate limiting config
 const RATE_LIMIT = 10; // requests per window
@@ -61,24 +59,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 300,
-      system: SYSTEM_PROMPT,
-      messages: [
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const result = await model.generateContent({
+      contents: [
         {
           role: "user",
-          content: message,
+          parts: [{ text: `${SYSTEM_PROMPT}\n\n질문: ${message}` }],
         },
       ],
+      generationConfig: {
+        maxOutputTokens: 300,
+      },
     });
 
-    const textContent = response.content.find((c) => c.type === "text");
-    const text = textContent?.type === "text" ? textContent.text : "";
+    const text = result.response.text();
 
     return NextResponse.json({ response: text });
   } catch (error) {
-    console.error("Claude API Error:", error);
+    console.error("Gemini API Error:", error);
     return NextResponse.json(
       { error: "AI 응답 중 오류가 발생했습니다." },
       { status: 500 }
