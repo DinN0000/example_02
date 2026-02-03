@@ -744,7 +744,7 @@ export default function Terminal() {
                 autoComplete="off"
                 spellCheck={false}
               />
-              <span className={`text-accent select-none ${isTyping || isLoading ? "pulse" : "cursor-blink"}`}>▋</span>
+{/* cursor removed */}
             </form>
           </div>
         </footer>
