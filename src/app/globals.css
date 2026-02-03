@@ -271,6 +271,19 @@ button {
   font-size: inherit;
 }
 
+/* Force input LTR and left caret */
+input[type="text"] {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: plaintext !important;
+  caret-color: var(--color-accent);
+}
+
+input[type="text"]::placeholder {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   html, body {
