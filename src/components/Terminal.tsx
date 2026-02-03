@@ -730,7 +730,8 @@ export default function Terminal() {
                       ? "thinking..." 
                       : "명령어를 입력하세요..."
                 }
-                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm"
+                className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-sm text-left"
+                style={{ direction: 'ltr' }}
                 autoComplete="off"
                 spellCheck={false}
               />
