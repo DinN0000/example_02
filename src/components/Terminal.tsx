@@ -242,15 +242,7 @@ export default function Terminal() {
       { type: "system", content: `$ ssh visitor@portfolio.dev` },
       { type: "system", content: "Connecting to portfolio.dev..." },
       { type: "system", content: "✓ Connection established" },
-      { type: "output", content: "" },
-      { type: "ascii", content: "  ▄▄███▄▄" },
-      { type: "ascii", content: "  ██ ▀ ██" },
-      { type: "ascii", content: "  ▀▀███▀▀" },
-      { type: "ascii", content: "   █████" },
-      { type: "ascii", content: "   ▀   ▀" },
-      { type: "output", content: "" },
-      { type: "highlight", content: `  ${portfolio.profile.name}` },
-      { type: "system", content: `  ${portfolio.profile.role} · ${portfolio.metrics.exp} exp` },
+      { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
