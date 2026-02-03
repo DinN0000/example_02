@@ -683,9 +683,17 @@ export default function Terminal() {
             {/* Press Enter to continue */}
             {showPressEnter && (
               <div className="mt-8 text-center fade-in">
-                <span className="text-accent glow-cyan cursor-blink-text">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPressEnter(false);
+                    setIntroComplete(true);
+                    showHome();
+                  }}
+                  className="text-accent glow-cyan cursor-blink-text hover:opacity-80 transition-opacity"
+                >
                   [ Press Enter to continue ]
-                </span>
+                </button>
               </div>
             )}
             
