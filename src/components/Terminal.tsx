@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { portfolio } from "@/data/portfolio";
 
 type Section = "intro" | "home" | "work" | "work-detail" | "fun" | "fun-detail" | "resume";
@@ -689,6 +690,20 @@ export default function Terminal() {
           onClick={() => inputRef.current?.focus()}
         >
           <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
+            {/* Robot mascot in intro */}
+            {currentSection === "intro" && lines.length > 0 && (
+              <div className="flex justify-center mb-6 animate-float">
+                <Image
+                  src="/robot.png"
+                  alt="Pixel Robot"
+                  width={120}
+                  height={120}
+                  className="pixelated"
+                  priority
+                />
+              </div>
+            )}
+            
             {lines.map((line, index) => renderLine(line, index))}
             
             {/* Press Enter to continue */}
