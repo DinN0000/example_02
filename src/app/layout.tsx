@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" dir="ltr">
       <body className={`${jetbrainsMono.variable} antialiased`}>
         {children}
       </body>
