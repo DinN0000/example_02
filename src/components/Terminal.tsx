@@ -238,11 +238,23 @@ export default function Terminal() {
   }, [addLines, showLoadingBar]);
 
   const showIntro = useCallback(() => {
+    const robotAscii = `
+    ┌───┐
+    │ ■ ■ │
+    └─┬─┘
+   ┌──┴──┐
+   │ ░░░ │
+   └┬───┬┘
+    │   │`;
+    
     const introLines: TerminalLine[] = [
       { type: "system", content: `$ ssh visitor@portfolio.dev` },
       { type: "system", content: "Connecting to portfolio.dev..." },
       { type: "system", content: "✓ Connection established" },
-      { type: "system", content: `[system] next 16.1.1 | react 19.2.3 | ${portfolio.profile.role}` },
+      { type: "output", content: "" },
+      { type: "ascii", content: robotAscii },
+      { type: "highlight", content: `    ${portfolio.profile.name}` },
+      { type: "system", content: `    ${portfolio.profile.role} · ${portfolio.metrics.exp} exp` },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
