@@ -463,7 +463,6 @@ export default function Terminal() {
         { type: "output", content: "" },
         { type: "divider", content: "──────────────────────────────────────────────────" },
         { type: "output", content: `📧 ${portfolio.profile.email}` },
-        { type: "output", content: `🔗 ${portfolio.profile.github}` },
         { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
       );
 

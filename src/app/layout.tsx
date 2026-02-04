@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import VisitorTracker from "@/components/VisitorTracker";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko" dir="ltr">
       <body className={`${jetbrainsMono.variable} antialiased`}>
+        <VisitorTracker />
         {children}
       </body>
     </html>
