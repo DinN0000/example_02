@@ -1,0 +1,6 @@
+name = "portfolio-chat-api"
+main = "chat-api.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# ANTHROPIC_API_KEY는 대시보드에서 설정 (Secrets)

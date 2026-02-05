@@ -65,7 +65,8 @@ export default function Terminal() {
     ]);
 
     try {
-      const response = await fetch("/api/chat", {
+      const apiUrl = "https://portfolio-chat-api.hwaa00-why.workers.dev";
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: question }),
@@ -733,8 +734,33 @@ export default function Terminal() {
         )}
 
         {/* 푸터 */}
-        <footer className="h-14 shrink-0 bg-card border-t border-border flex items-center justify-center">
-          <div className="w-full max-w-3xl px-6">
+        <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
+          <div className="w-full max-w-3xl px-6 py-4">
+            {/* 선택지 드롭다운 - 인풋 포커스 시 표시 */}
+            {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
+              <div className="absolute bottom-full left-0 right-0 flex justify-center pb-2 fade-in">
+                <div className="w-full max-w-3xl px-6">
+                  <div className="bg-card/95 border border-border rounded-lg p-3 backdrop-blur-sm shadow-lg">
+                    <div className="text-muted text-xs mb-2">Quick Navigation</div>
+                    <div className="flex flex-wrap gap-2">
+                      {MENU_ITEMS.map((item) => (
+                        <button
+                          key={item.key}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // Prevent blur
+                            handleMenuClick(item.cmd);
+                          }}
+                          className="px-3 py-1.5 rounded bg-accent/10 border border-accent/30 text-accent text-sm hover:bg-accent/20 transition-colors"
+                        >
+                          <span className="text-muted">[{item.key}]</span> {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
               <span className="text-accent select-none glow-cyan">&gt;</span>
               {!isFocused && !input && (
@@ -754,7 +780,7 @@ export default function Terminal() {
                         ? "Enter를 눌러 계속하세요..." 
                         : isLoading 
                           ? "thinking..." 
-                          : "명령어를 입력하세요...")
+                          : "명령어를 입력하거나 질문하세요...")
                     : ""
                 }
                 className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-base sm:text-sm text-left"
