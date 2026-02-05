@@ -6,7 +6,7 @@ import { portfolio } from "@/data/portfolio";
 type Section = "intro" | "home" | "work" | "work-detail" | "fun" | "fun-detail" | "resume";
 
 interface TerminalLine {
-  type: "command" | "output" | "ascii" | "system" | "menu" | "divider" | "section-title" | "highlight";
+  type: "command" | "output" | "ascii" | "system" | "menu" | "divider" | "section-title" | "highlight" | "muted" | "tagline";
   content: string;
 }
 
@@ -30,9 +30,19 @@ export default function Terminal() {
   const [showPressEnter, setShowPressEnter] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [paletteIndex, setPaletteIndex] = useState(0);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Section to palette index mapping
+  const sectionToIndex: Record<string, number> = {
+    home: 0,
+    about: 1,
+    work: 2,
+    fun: 3,
+    resume: 4,
+  };
 
   // Real-time clock
   useEffect(() => {
@@ -219,22 +229,25 @@ export default function Terminal() {
 
   const showHome = useCallback(() => {
     setCurrentSection("home");
+    setPaletteIndex(0); // 현재 섹션 하이라이트
     showLoadingBar("home.md", () => {
       const homeLines: TerminalLine[] = [
-        { type: "command", content: `user@portfolio:~$ cat home.md` },
-        { type: "highlight", content: `✱` },
-        { type: "section-title", content: `## ${portfolio.home.tagline}` },
-        { type: "ascii", content: portfolio.home.asciiArt },
-        ...portfolio.home.intro.map(line => ({ type: "output" as const, content: line })),
-        { type: "divider", content: "──────────────────────────────────────────────────" },
+        { type: "command", content: `visitor@portfolio:~$ cat home.md` },
+        { type: "output", content: "" },
+        { type: "section-title", content: `## HIGHLIGHTS` },
+        { type: "output", content: "" },
         ...portfolio.home.highlights.flatMap(item => [
           { type: "highlight" as const, content: `● ${item.title}` },
           { type: "output" as const, content: `  ${item.desc}` },
+          { type: "output" as const, content: "" },
         ]),
-        { type: "output", content: "" },
-        { type: "system", content: `[system] vibe-coded by ${portfolio.profile.name} × Claude` },
+        { type: "divider", content: "—————————————————————————————————————" },
+        { type: "muted", content: "↑ 하이라이트 · 아래 메뉴에서 상세 정보 확인" },
       ];
-      addLines(homeLines, () => setShowMenu(true));
+      addLines(homeLines, () => {
+        setShowMenu(true);
+        setPaletteIndex(1); // 다음 섹션으로
+      });
     });
   }, [addLines, showLoadingBar]);
 
@@ -242,24 +255,26 @@ export default function Terminal() {
     const introLines: TerminalLine[] = [
       { type: "system", content: `$ ssh visitor@portfolio.dev` },
       { type: "system", content: "Connecting to portfolio.dev..." },
-      { type: "system", content: "✓ Connection established" },
+      { type: "system", content: "✓ Connection established (latency: 12ms)" },
+      { type: "muted", content: "[system] next 15.x | react 19.x | seoul-kr" },
       { type: "output", content: "" },
-      { type: "highlight", content: "🚧 CURRENTLY BUILDING..." },
+      { type: "command", content: `visitor@portfolio:~$ cat intro.md` },
       { type: "output", content: "" },
-      { type: "section-title", content: `${portfolio.profile.name} (${portfolio.profile.nameEn})` },
+      { type: "tagline", content: `✦ ${portfolio.home.tagline}` },
       { type: "output", content: "" },
-      { type: "output", content: "AI 친화적인 개인 PKM으로 지식을 쌓고," },
-      { type: "output", content: "이를 기반으로 포트폴리오를 빌드하고 있습니다." },
+      { type: "ascii", content: portfolio.home.asciiArt },
       { type: "output", content: "" },
-      { type: "system", content: "⚠️  실험적인 프로젝트입니다." },
-      { type: "system", content: "    콘텐츠 및 기능이 상시 변경될 수 있습니다." },
+      { type: "divider", content: `—— ${portfolio.profile.name} · ${portfolio.profile.role} ——` },
       { type: "output", content: "" },
-      { type: "divider", content: "──────────────────────────────────────────────────" },
-      { type: "system", content: "[0] home  [1] about  [2] work  [3] fun  [4] resume" },
+      { type: "output", content: "고복잡도 시장의 어려운 문제에서 기회를 발견하고," },
+      { type: "output", content: "제품으로 풀어내는 Product Owner입니다." },
+      { type: "output", content: "" },
+      { type: "muted", content: "[system] vibe-coded with Claude Code × Opus 4.5" },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
       setShowPressEnter(true);
+      setPaletteIndex(0); // home 하이라이트
     });
   }, [addLines]);
 
@@ -281,6 +296,7 @@ export default function Terminal() {
 
   const showAbout = useCallback(() => {
     setCurrentSection("home"); // reuse home section state
+    setPaletteIndex(1); // 현재 섹션 하이라이트
     showLoadingBar("about.md", () => {
       const aboutLines: TerminalLine[] = [
         { type: "command", content: `user@portfolio:~$ cat about.md` },
@@ -326,12 +342,16 @@ export default function Terminal() {
         );
       });
 
-      addLines(aboutLines, () => setShowMenu(true));
+      addLines(aboutLines, () => {
+        setShowMenu(true);
+        setPaletteIndex(2); // 다음 섹션으로
+      });
     });
   }, [addLines, showLoadingBar]);
 
   const showWork = useCallback(() => {
     setCurrentSection("work");
+    setPaletteIndex(2); // 현재 섹션 하이라이트
     showLoadingBar("work.md", () => {
       const workLines: TerminalLine[] = [
         { type: "command", content: `user@portfolio:~$ cat work.md` },
@@ -356,7 +376,10 @@ export default function Terminal() {
         { type: "system", content: "프로젝트 번호를 입력하면 상세 내용을 볼 수 있습니다." },
       );
 
-      addLines(workLines, () => setShowMenu(true));
+      addLines(workLines, () => {
+        setShowMenu(true);
+        setPaletteIndex(3); // 다음 섹션으로
+      });
     });
   }, [addLines, showLoadingBar]);
 
@@ -396,6 +419,7 @@ export default function Terminal() {
 
   const showFun = useCallback(() => {
     setCurrentSection("fun");
+    setPaletteIndex(3); // 현재 섹션 하이라이트
     showLoadingBar("fun.md", () => {
       const funLines: TerminalLine[] = [
         { type: "command", content: `user@portfolio:~$ cat fun.md` },
@@ -419,12 +443,16 @@ export default function Terminal() {
         funLines.push({ type: "output", content: "" });
       });
 
-      addLines(funLines, () => setShowMenu(true));
+      addLines(funLines, () => {
+        setShowMenu(true);
+        setPaletteIndex(4); // 다음 섹션으로
+      });
     });
   }, [addLines, showLoadingBar]);
 
   const showResume = useCallback(() => {
     setCurrentSection("resume");
+    setPaletteIndex(4); // 현재 섹션 하이라이트
     showLoadingBar("resume.md", () => {
       const resumeLines: TerminalLine[] = [
         { type: "command", content: `user@portfolio:~$ cat resume.md` },
@@ -467,7 +495,10 @@ export default function Terminal() {
         { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
       );
 
-      addLines(resumeLines, () => setShowMenu(true));
+      addLines(resumeLines, () => {
+        setShowMenu(true);
+        setPaletteIndex(0); // 처음으로 순환
+      });
     });
   }, [addLines, showLoadingBar]);
 
@@ -613,7 +644,7 @@ export default function Terminal() {
         );
       case "divider":
         return (
-          <div key={index} className={`text-border/60 select-none ${baseAnimation}`}>
+          <div key={index} className={`text-muted/70 select-none text-sm ${baseAnimation}`}>
             {line.content}
           </div>
         );
@@ -634,6 +665,20 @@ export default function Terminal() {
         return (
           <div key={index} className={`text-highlight-cyan ${baseAnimation}`}>
             {line.content}
+          </div>
+        );
+      case "muted":
+        return (
+          <div key={index} className={`text-muted/60 text-xs ${baseAnimation}`}>
+            {line.content}
+          </div>
+        );
+      case "tagline":
+        return (
+          <div key={index} className={`${baseAnimation}`}>
+            <span className="inline-block px-4 py-2 border border-accent/40 rounded text-accent text-sm">
+              {line.content}
+            </span>
           </div>
         );
       default:
@@ -714,42 +759,42 @@ export default function Terminal() {
           </div>
         </main>
 
-        {/* 메뉴 */}
-        {showMenu && !isTyping && introComplete && (
-          <nav className="shrink-0 border-t border-border bg-card/50 flex justify-center">
-            <div className="w-full max-w-3xl px-6 py-3">
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {MENU_ITEMS.map((item) => (
-                  <button
-                    key={item.key}
-                    onClick={() => handleMenuClick(item.cmd)}
-                    className="text-muted hover:text-accent transition-colors"
-                  >
-                    <span className="text-accent">[{item.key}]</span> {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </nav>
-        )}
-
         {/* 푸터 */}
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
           <div className="w-full max-w-3xl px-6 py-4">
             {/* Command Palette - 인풋 포커스 시 표시 */}
             {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
-              <div className="absolute bottom-full left-0 right-0 flex justify-center pb-2 fade-in">
-                <div className="w-96 bg-card border border-border rounded-lg overflow-hidden shadow-xl">
-                  {/* Header */}
-                  <div className="px-5 py-3 border-b border-border/50 bg-card/80">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted text-xs font-medium">Select Command</span>
-                      <span className="text-muted/50 text-xs">↑↓ nav · ↵ select</span>
-                    </div>
-                  </div>
-                  {/* Menu Items */}
-                  <div className="px-3 py-3 space-y-1">
-                    {MENU_ITEMS.map((item) => (
+              <div
+                className="fade-in"
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  right: '24px',
+                  marginBottom: '8px',
+                  width: '280px',
+                  backgroundColor: '#161b22',
+                  border: '1px solid #21262d',
+                  borderRadius: '6px',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                }}
+              >
+                {/* Header */}
+                <div style={{
+                  padding: '8px 12px',
+                  borderBottom: '1px solid #21262d',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                  <span style={{ color: '#8b949e', fontSize: '11px' }}>Select Command</span>
+                  <span style={{ color: '#6e7681', fontSize: '10px' }}>↑↓ · ↵</span>
+                </div>
+                {/* Menu Items */}
+                <div style={{ padding: '6px' }}>
+                  {MENU_ITEMS.map((item, index) => {
+                    const isSelected = index === paletteIndex;
+                    return (
                       <button
                         key={item.key}
                         type="button"
@@ -757,14 +802,36 @@ export default function Terminal() {
                           e.preventDefault();
                           handleMenuClick(item.cmd);
                         }}
-                        className="w-full px-4 py-2.5 rounded flex items-center gap-6 text-left hover:bg-accent/10 transition-colors group"
+                        onMouseEnter={() => setPaletteIndex(index)}
+                        style={{
+                          width: '100%',
+                          padding: '6px 10px',
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          textAlign: 'left',
+                          backgroundColor: isSelected ? 'rgba(88,212,195,0.15)' : 'transparent',
+                          transition: 'background-color 0.1s',
+                        }}
                       >
-                        <span className="shrink-0 w-8 text-xs font-mono text-muted group-hover:text-accent">[{item.key}]</span>
-                        <span className="shrink-0 w-24 text-sm font-medium text-accent">{item.label}</span>
-                        <span className="text-xs text-muted/60">{item.desc}</span>
+                        <span style={{
+                          width: '24px',
+                          fontSize: '11px',
+                          fontFamily: 'var(--font-mono)',
+                          color: isSelected ? '#58d4c3' : '#6e7681',
+                        }}>[{item.key}]</span>
+                        <span style={{
+                          width: '64px',
+                          fontSize: '12px',
+                          color: isSelected ? '#58d4c3' : '#c9d1d9',
+                        }}>{item.label}</span>
+                        <span style={{
+                          fontSize: '11px',
+                          color: isSelected ? '#58d4c3' : '#6e7681',
+                        }}>{item.desc}</span>
                       </button>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -780,6 +847,21 @@ export default function Terminal() {
                 onChange={(e) => setInput(e.target.value)}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                onKeyDown={(e) => {
+                  if (!isFocused || !introComplete || isTyping || isLoading || showPressEnter) return;
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setPaletteIndex((prev) => (prev + 1) % MENU_ITEMS.length);
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setPaletteIndex((prev) => (prev - 1 + MENU_ITEMS.length) % MENU_ITEMS.length);
+                  } else if (e.key === 'Enter' && !input.trim()) {
+                    e.preventDefault();
+                    handleMenuClick(MENU_ITEMS[paletteIndex].cmd);
+                    setIsFocused(false);
+                    inputRef.current?.blur();
+                  }
+                }}
                 disabled={isTyping || isLoading}
                 placeholder={
                   isFocused
