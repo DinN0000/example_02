@@ -43,7 +43,7 @@ export default {
           "anthropic-version": "2023-06-01",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-3-5-sonnet-latest",
           max_tokens: 300,
           system: `당신은 포트폴리오 어시스턴트입니다. 방문자의 질문에 친절하고 전문적으로 답변해주세요. 답변은 간결하게 2-3문장 정도로 해주세요.`,
           messages: [{ role: "user", content: message }],
@@ -54,7 +54,7 @@ export default {
 
       if (data.error) {
         console.error("Claude API Error:", data.error);
-        return new Response(JSON.stringify({ error: "AI 응답 중 오류가 발생했습니다." }), {
+        return new Response(JSON.stringify({ error: "AI 응답 중 오류가 발생했습니다.", debug: data.error }), {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
