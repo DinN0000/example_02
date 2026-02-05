@@ -11,11 +11,11 @@ interface TerminalLine {
 }
 
 const MENU_ITEMS = [
-  { key: "0", cmd: "home", label: "/home" },
-  { key: "1", cmd: "about", label: "/about" },
-  { key: "2", cmd: "work", label: "/work" },
-  { key: "3", cmd: "fun", label: "/fun" },
-  { key: "4", cmd: "resume", label: "/resume" },
+  { key: "0", cmd: "home", label: "/home", desc: "Back to Home" },
+  { key: "1", cmd: "about", label: "/about", desc: "About Me" },
+  { key: "2", cmd: "work", label: "/work", desc: "Work Projects" },
+  { key: "3", cmd: "fun", label: "/fun", desc: "Side Projects" },
+  { key: "4", cmd: "resume", label: "/resume", desc: "Resume" },
 ];
 
 export default function Terminal() {
@@ -65,7 +65,7 @@ export default function Terminal() {
     ]);
 
     try {
-      const apiUrl = "https://portfolio-chat-api.hwaa00-why.workers.dev";
+      const apiUrl = "/api/chat";
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -736,27 +736,34 @@ export default function Terminal() {
         {/* 푸터 */}
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
           <div className="w-full max-w-3xl px-6 py-4">
-            {/* 선택지 드롭다운 - 인풋 포커스 시 표시 */}
+            {/* Command Palette - 인풋 포커스 시 표시 */}
             {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
               <div className="absolute bottom-full left-0 right-0 flex justify-center pb-2 fade-in">
-                <div className="w-full max-w-3xl px-6">
-                  <div className="bg-card/95 border border-border rounded-lg p-3 backdrop-blur-sm shadow-lg">
-                    <div className="text-muted text-xs mb-2">Quick Navigation</div>
-                    <div className="flex flex-wrap gap-2">
-                      {MENU_ITEMS.map((item) => (
-                        <button
-                          key={item.key}
-                          type="button"
-                          onMouseDown={(e) => {
-                            e.preventDefault(); // Prevent blur
-                            handleMenuClick(item.cmd);
-                          }}
-                          className="px-3 py-1.5 rounded bg-accent/10 border border-accent/30 text-accent text-sm hover:bg-accent/20 transition-colors"
-                        >
-                          <span className="text-muted">[{item.key}]</span> {item.label}
-                        </button>
-                      ))}
+                <div className="w-96 bg-card border border-border rounded-lg overflow-hidden shadow-xl">
+                  {/* Header */}
+                  <div className="px-5 py-3 border-b border-border/50 bg-card/80">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted text-xs font-medium">Select Command</span>
+                      <span className="text-muted/50 text-xs">↑↓ nav · ↵ select</span>
                     </div>
+                  </div>
+                  {/* Menu Items */}
+                  <div className="px-3 py-3 space-y-1">
+                    {MENU_ITEMS.map((item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleMenuClick(item.cmd);
+                        }}
+                        className="w-full px-4 py-2.5 rounded flex items-center gap-6 text-left hover:bg-accent/10 transition-colors group"
+                      >
+                        <span className="shrink-0 w-8 text-xs font-mono text-muted group-hover:text-accent">[{item.key}]</span>
+                        <span className="shrink-0 w-24 text-sm font-medium text-accent">{item.label}</span>
+                        <span className="text-xs text-muted/60">{item.desc}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
