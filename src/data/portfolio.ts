@@ -253,13 +253,13 @@ export const portfolio = {
         period: "2021 - 2022",
         company: "Gowid",
         role: "Product Manager",
-        description: "AI 로보어드바이저 '호핑' PM. 행동경제학 기반 Human-AI 신뢰 설계로 핵심 지표 개선 달성.",
+        description: "법인카드 관리 SaaS PM. 카드 사용 데이터 기반 고객 세그먼트 정의, 핵심 고객 페르소나 도출.",
       },
       {
         period: "2019 - 2021",
         company: "HAII",
         role: "UX Researcher / PO",
-        description: "연세대 HCI Lab에서 Human-AI Interaction 논문 3편 발표. 정부과제 AI 프로젝트 PO.",
+        description: "AI 로보어드바이저 '호핑' 서비스 기획 PO. 행동경제학 기반 Human-AI 신뢰 설계로 핵심 지표 개선. 연세대 HCI Lab 논문 3편 발표. 정부과제 AI 프로젝트 PO.",
       },
     ],
     education: [

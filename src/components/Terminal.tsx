@@ -295,7 +295,7 @@ export default function Terminal() {
           { type: "output" as const, content: `  ${item.desc}` },
           { type: "output" as const, content: "" },
         ]),
-        { type: "divider", content: "—————————————————————————————————————" },
+        { type: "divider", content: "──────────────────────────────────────────────────" },
         { type: "muted", content: "↑ 하이라이트 · 아래 메뉴에서 상세 정보 확인" },
       ];
       addLines(homeLines, () => {
@@ -318,7 +318,7 @@ export default function Terminal() {
       { type: "output", content: "" },
       { type: "ascii", content: portfolio.home.asciiArt },
       { type: "output", content: "" },
-      { type: "divider", content: `—— ${portfolio.profile.name} · ${portfolio.profile.role} ——` },
+      { type: "divider", content: `── ${portfolio.profile.name} · ${portfolio.profile.role} ──` },
       { type: "output", content: "" },
       { type: "output", content: "고복잡도 시장의 어려운 문제에서 기회를 발견하고," },
       { type: "output", content: "제품으로 풀어내는 Product Owner 이종화입니다." },
@@ -697,8 +697,8 @@ export default function Terminal() {
         );
       case "section-title":
         return (
-          <div key={index} className={`text-section-title font-semibold text-lg mt-2 ${baseAnimation}`}>
-            <span className="text-highlight-orange mr-2">##</span>
+          <div key={index} className={`text-section-title font-semibold text-base mt-3 mb-1 ${baseAnimation}`}>
+            <span className="text-muted/50 mr-2">##</span>
             {line.content.replace(/^##\s*/, '')}
           </div>
         );
@@ -756,16 +756,16 @@ export default function Terminal() {
             
             {/* Tagline badge */}
             <div className="hidden md:flex items-center">
-              <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-xs glow-cyan">
+              <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-xs">
                 ★ where ideas become products.
               </span>
             </div>
-            
+
             {/* Stats & Clock */}
             <div className="flex items-center gap-4 text-muted text-xs">
-              <span className="hidden sm:inline">PROJECTS: <span className="text-highlight-cyan glow-cyan">{portfolio.metrics.projects}</span></span>
-              <span className="hidden sm:inline">EXP: <span className="text-highlight-orange glow-orange">{portfolio.metrics.exp}</span></span>
-              <span className="text-accent font-medium glow-cyan">{currentTime}</span>
+              <span className="hidden sm:inline">PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
+              <span className="hidden sm:inline">EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+              <span className="text-accent font-medium glow-accent">{currentTime}</span>
             </div>
           </div>
         </header>
@@ -802,37 +802,17 @@ export default function Terminal() {
 
         {/* 푸터 */}
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
-          <div className="w-full max-w-3xl px-6 py-5">
+          <div className="w-full max-w-3xl px-6 py-3">
             {/* Command Palette - 인풋 포커스 시 표시 */}
             {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
-              <div
-                className="fade-in"
-                style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  right: '24px',
-                  marginBottom: '8px',
-                  width: '280px',
-                  backgroundColor: '#161b22',
-                  border: '1px solid #21262d',
-                  borderRadius: '6px',
-                  overflow: 'hidden',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                }}
-              >
+              <div className="fade-in absolute bottom-full right-6 mb-3 w-72 bg-card border border-border rounded-lg overflow-hidden shadow-lg shadow-black/30">
                 {/* Header */}
-                <div style={{
-                  padding: '8px 12px',
-                  borderBottom: '1px solid #21262d',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                  <span style={{ color: '#8b949e', fontSize: '11px' }}>Select Command</span>
-                  <span style={{ color: '#6e7681', fontSize: '10px' }}>↑↓ · ↵</span>
+                <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
+                  <span className="text-muted text-[11px]">Select Command</span>
+                  <span className="text-muted/50 text-[10px]">↑↓ · ↵</span>
                 </div>
                 {/* Menu Items */}
-                <div style={{ padding: '6px' }}>
+                <div className="p-2">
                   {MENU_ITEMS.map((item, index) => {
                     const isSelected = index === paletteIndex;
                     return (
@@ -844,35 +824,35 @@ export default function Terminal() {
                           handleMenuClick(item.cmd);
                         }}
                         onMouseEnter={() => setPaletteIndex(index)}
-                        style={{
-                          width: '100%',
-                          padding: '6px 10px',
-                          borderRadius: '4px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          textAlign: 'left',
-                          backgroundColor: isSelected ? 'rgba(88,212,195,0.15)' : 'transparent',
-                          transition: 'background-color 0.1s',
-                        }}
+                        className={`w-full px-3 py-2 rounded-md flex items-center text-left transition-colors duration-100 ${
+                          isSelected ? 'bg-accent/15' : 'bg-transparent'
+                        }`}
                       >
-                        <span style={{
-                          width: '24px',
-                          fontSize: '11px',
-                          fontFamily: 'var(--font-mono)',
-                          color: isSelected ? '#58d4c3' : '#6e7681',
-                        }}>[{item.key}]</span>
-                        <span style={{
-                          width: '64px',
-                          fontSize: '12px',
-                          color: isSelected ? '#58d4c3' : '#c9d1d9',
-                        }}>{item.label}</span>
-                        <span style={{
-                          fontSize: '11px',
-                          color: isSelected ? '#58d4c3' : '#6e7681',
-                        }}>{item.desc}</span>
+                        <span className={`w-7 text-[11px] font-mono ${isSelected ? 'text-accent' : 'text-muted/50'}`}>
+                          [{item.key}]
+                        </span>
+                        <span className={`w-16 text-xs ${isSelected ? 'text-accent' : 'text-foreground'}`}>
+                          {item.label}
+                        </span>
+                        <span className={`text-[11px] ${isSelected ? 'text-accent' : 'text-muted/50'}`}>
+                          {item.desc}
+                        </span>
                       </button>
                     );
                   })}
+                </div>
+              </div>
+            )}
+            {/* Status bar above input */}
+            {introComplete && (
+              <div className="flex items-center justify-between mb-2 text-[10px] text-muted/40">
+                <div className="flex items-center gap-3">
+                  <span>
+                    Next: [{MENU_ITEMS[paletteIndex]?.key}] {MENU_ITEMS[paletteIndex]?.label} {MENU_ITEMS[paletteIndex]?.desc}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span>{currentSection === "intro" ? "home" : currentSection}</span>
                 </div>
               </div>
             )}
@@ -906,10 +886,10 @@ export default function Terminal() {
                 disabled={isTyping || isLoading}
                 placeholder={
                   isFocused
-                    ? (showPressEnter 
-                        ? "Enter를 눌러 계속하세요..." 
-                        : isLoading 
-                          ? "thinking..." 
+                    ? (showPressEnter
+                        ? "Enter를 눌러 계속하세요..."
+                        : isLoading
+                          ? "thinking..."
                           : "명령어를 입력하거나 질문하세요...")
                     : ""
                 }
@@ -919,6 +899,18 @@ export default function Terminal() {
                 autoComplete="off"
                 spellCheck={false}
               />
+              {/* Enter button */}
+              <button
+                type="submit"
+                disabled={isTyping || isLoading}
+                className="shrink-0 w-7 h-7 rounded-md flex items-center justify-center bg-accent/15 text-accent hover:bg-accent/25 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Submit"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 10 4 15 9 20" />
+                  <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+                </svg>
+              </button>
             </form>
           </div>
         </footer>
