@@ -66,14 +66,7 @@ export async function onRequestPost(context) {
     if (!response.ok) {
       console.error("Anthropic API error:", data);
       return new Response(
-        JSON.stringify({
-          error: "AI 응답 중 오류가 발생했습니다.",
-          debug: {
-            status: response.status,
-            apiError: data.error || data,
-            hasKey: !!context.env.ANTHROPIC_API_KEY,
-          },
-        }),
+        JSON.stringify({ error: "AI 응답 중 오류가 발생했습니다." }),
         { status: 500, headers: corsHeaders }
       );
     }
@@ -87,10 +80,7 @@ export async function onRequestPost(context) {
   } catch (error) {
     console.error("Chat API Error:", error);
     return new Response(
-      JSON.stringify({
-        error: "AI 응답 중 오류가 발생했습니다.",
-        debug: { message: error.message, hasKey: !!context.env.ANTHROPIC_API_KEY },
-      }),
+      JSON.stringify({ error: "AI 응답 중 오류가 발생했습니다." }),
       { status: 500, headers: corsHeaders }
     );
   }
