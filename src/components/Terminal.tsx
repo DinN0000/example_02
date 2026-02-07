@@ -18,6 +18,33 @@ const MENU_ITEMS = [
   { key: "4", cmd: "resume", label: "/resume", desc: "Resume" },
 ];
 
+// Client-side rate limiting
+const CHAT_LIMIT = 10;
+const CHAT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function getChatUsage(): { count: number; resetAt: number } {
+  try {
+    const stored = localStorage.getItem("chat_usage");
+    if (!stored) return { count: 0, resetAt: Date.now() + CHAT_WINDOW_MS };
+    const data = JSON.parse(stored);
+    if (Date.now() > data.resetAt) return { count: 0, resetAt: Date.now() + CHAT_WINDOW_MS };
+    return data;
+  } catch {
+    return { count: 0, resetAt: Date.now() + CHAT_WINDOW_MS };
+  }
+}
+
+function incrementChatUsage() {
+  const usage = getChatUsage();
+  usage.count++;
+  if (usage.count === 1) usage.resetAt = Date.now() + CHAT_WINDOW_MS;
+  localStorage.setItem("chat_usage", JSON.stringify(usage));
+}
+
+function getChatRemaining(): number {
+  return Math.max(0, CHAT_LIMIT - getChatUsage().count);
+}
+
 export default function Terminal() {
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [input, setInput] = useState("");
@@ -66,6 +93,17 @@ export default function Terminal() {
   }, []);
 
   const askClaude = useCallback(async (question: string) => {
+    // Client-side rate limit check
+    if (getChatRemaining() <= 0) {
+      setLines(prev => [
+        ...prev,
+        { type: "command", content: `> ${question}` },
+        { type: "system", content: "[제한] AI 채팅 한도(시간당 10회)를 초과했습니다. 잠시 후 다시 시도해주세요." },
+      ]);
+      setShowMenu(true);
+      return;
+    }
+
     setIsLoading(true);
     setShowMenu(false);
     setLines(prev => [
@@ -84,12 +122,28 @@ export default function Terminal() {
 
       const data = await response.json();
 
+      if (response.status === 429) {
+        setLines(prev => {
+          const newLines = prev.slice(0, -1);
+          return [
+            ...newLines,
+            { type: "output", content: "" },
+            { type: "system", content: "[제한] AI 채팅 한도를 초과했습니다. 1시간 후 다시 시도해주세요." },
+          ];
+        });
+        return;
+      }
+
+      incrementChatUsage();
+      const remaining = getChatRemaining();
+
       setLines(prev => {
         const newLines = prev.slice(0, -1);
         return [
           ...newLines,
           { type: "output", content: "" },
           { type: "output", content: data.response || data.error || "응답을 받지 못했습니다." },
+          { type: "muted", content: `[남은 질문: ${remaining}/${CHAT_LIMIT}]` },
         ];
       });
     } catch {

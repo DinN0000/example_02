@@ -1,3 +1,31 @@
+// Rate limiting config
+const RATE_LIMIT = 10; // max requests per window
+const RATE_WINDOW_SECONDS = 3600; // 1 hour
+
+async function checkRateLimit(kv, ip) {
+  if (!kv) return { allowed: true, remaining: RATE_LIMIT };
+
+  const key = `rate:${ip}`;
+  const record = await kv.get(key, { type: "json" });
+
+  if (!record) {
+    await kv.put(key, JSON.stringify({ count: 1 }), {
+      expirationTtl: RATE_WINDOW_SECONDS,
+    });
+    return { allowed: true, remaining: RATE_LIMIT - 1 };
+  }
+
+  if (record.count >= RATE_LIMIT) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  const newCount = record.count + 1;
+  await kv.put(key, JSON.stringify({ count: newCount }), {
+    expirationTtl: RATE_WINDOW_SECONDS,
+  });
+  return { allowed: true, remaining: RATE_LIMIT - newCount };
+}
+
 const SYSTEM_PROMPT = `당신은 이종화의 포트폴리오 어시스턴트입니다.
 방문자의 질문에 친절하고 전문적으로 답변해주세요.
 답변은 간결하게 2-3문장 정도로 해주세요.
@@ -37,6 +65,31 @@ export async function onRequestPost(context) {
   };
 
   try {
+    // Rate limiting
+    const ip =
+      context.request.headers.get("cf-connecting-ip") ||
+      context.request.headers.get("x-forwarded-for")?.split(",")[0] ||
+      "unknown";
+
+    const kv = context.env.RATE_LIMIT_KV || null;
+    const rateLimit = await checkRateLimit(kv, ip);
+
+    if (!rateLimit.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "요청 한도를 초과했습니다. 1시간 후 다시 시도해주세요.",
+          remaining: 0,
+        }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "X-RateLimit-Remaining": "0",
+          },
+        }
+      );
+    }
+
     const { message } = await context.request.json();
 
     if (!message) {
@@ -74,8 +127,13 @@ export async function onRequestPost(context) {
     const text = data.content?.[0]?.text || "";
 
     return new Response(
-      JSON.stringify({ response: text }),
-      { headers: corsHeaders }
+      JSON.stringify({ response: text, remaining: rateLimit.remaining }),
+      {
+        headers: {
+          ...corsHeaders,
+          "X-RateLimit-Remaining": String(rateLimit.remaining),
+        },
+      }
     );
   } catch (error) {
     console.error("Chat API Error:", error);
