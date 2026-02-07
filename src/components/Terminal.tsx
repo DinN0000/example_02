@@ -321,7 +321,7 @@ export default function Terminal() {
       { type: "divider", content: `—— ${portfolio.profile.name} · ${portfolio.profile.role} ——` },
       { type: "output", content: "" },
       { type: "output", content: "고복잡도 시장의 어려운 문제에서 기회를 발견하고," },
-      { type: "output", content: "제품으로 풀어내는 Product Owner입니다." },
+      { type: "output", content: "제품으로 풀어내는 Product Owner 이종화입니다." },
       { type: "output", content: "" },
       { type: "muted", content: "[system] vibe-coded with Claude Code × Opus 4.5" },
       { type: "output", content: "" },
@@ -558,6 +558,8 @@ export default function Terminal() {
 
   const handleCommand = useCallback((cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
+    // Support both "home" and "/home" formats
+    const normalized = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
 
     if (trimmed === "" && showMenu) {
       return;
@@ -570,6 +572,16 @@ export default function Terminal() {
       setIntroComplete(false);
       showIntro();
       return;
+    }
+
+    // Check for project number in work section (before menu selection)
+    if (currentSection === "work" || currentSection === "work-detail") {
+      const num = parseInt(trimmed);
+      if (!isNaN(num) && num >= 1 && num <= portfolio.work.projects.length) {
+        setLines(prev => [...prev, { type: "output", content: "" }]);
+        showWorkDetail(portfolio.work.projects[num - 1].slug);
+        return;
+      }
     }
 
     // Handle numeric menu selection
@@ -586,44 +598,19 @@ export default function Terminal() {
       return;
     }
 
-    if (trimmed === "home") {
-      setLines(prev => [...prev, { type: "output", content: "" }]);
-      showHome();
-      return;
-    }
+    // Handle text commands (with or without "/" prefix)
+    const navCommands: Record<string, () => void> = {
+      home: showHome,
+      about: showAbout,
+      work: showWork,
+      fun: showFun,
+      resume: showResume,
+    };
 
-    if (trimmed === "about") {
+    if (navCommands[normalized]) {
       setLines(prev => [...prev, { type: "output", content: "" }]);
-      showAbout();
+      navCommands[normalized]();
       return;
-    }
-
-    if (trimmed === "work") {
-      setLines(prev => [...prev, { type: "output", content: "" }]);
-      showWork();
-      return;
-    }
-
-    if (trimmed === "fun") {
-      setLines(prev => [...prev, { type: "output", content: "" }]);
-      showFun();
-      return;
-    }
-
-    if (trimmed === "resume") {
-      setLines(prev => [...prev, { type: "output", content: "" }]);
-      showResume();
-      return;
-    }
-
-    // Check for project number in work section
-    if (currentSection === "work" || currentSection === "work-detail") {
-      const num = parseInt(trimmed);
-      if (num >= 1 && num <= portfolio.work.projects.length) {
-        setLines(prev => [...prev, { type: "output", content: "" }]);
-        showWorkDetail(portfolio.work.projects[num - 1].slug);
-        return;
-      }
     }
 
     // If not a command, treat as a question for Claude
