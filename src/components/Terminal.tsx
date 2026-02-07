@@ -753,7 +753,7 @@ export default function Terminal() {
       <div className="absolute inset-3 bg-card rounded-xl border border-border shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         
         {/* 헤더 */}
-        <header className="h-14 shrink-0 bg-card border-b border-border flex items-center justify-center">
+        <header className="h-11 shrink-0 bg-card border-b border-border flex items-center justify-center">
           <div className="w-full max-w-3xl px-6 flex items-center justify-between">
             {/* Traffic lights (macOS style) */}
             <div className="flex items-center gap-4">
@@ -815,7 +815,7 @@ export default function Terminal() {
 
         {/* 푸터 */}
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
-          <div className="w-full max-w-3xl px-6 py-4">
+          <div className="w-full max-w-3xl px-6 py-5">
             {/* Command Palette - 인풋 포커스 시 표시 */}
             {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
               <div
