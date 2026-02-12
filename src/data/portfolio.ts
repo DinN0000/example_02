@@ -1,7 +1,7 @@
 export const portfolio = {
   // 메트릭 (상단 바)
   metrics: {
-    projects: 5,
+    projects: 7,
     exp: "6yr",
   },
 
@@ -218,6 +218,30 @@ export const portfolio = {
           "● 터미널 인터페이스 UX 구현",
         ],
         link: null,
+      },
+      {
+        slug: "side-dotbrain",
+        title: "DotBrain",
+        summary: "AI 기반 문서 자동 분류 macOS 앱",
+        description: [
+          "● 파일을 인박스에 드롭하면 AI가 PARA 방법론으로 자동 분류",
+          "● 2단계 AI 분류: Fast(Haiku/Flash) → Precise(Sonnet/Pro)",
+          "● PDF, 이미지, 워드, 엑셀, PPT 등 다양한 포맷 지원",
+          "● Human-readable + AI-optimized 설계 철학",
+        ],
+        link: "https://github.com/DinN0000/DotBrain",
+      },
+      {
+        slug: "side-companionbot",
+        title: "CompanionBot",
+        summary: "Claude 기반 개인 AI 친구 텔레그램 봇",
+        description: [
+          "● Extended Thinking으로 깊이 있는 대화",
+          "● 시맨틱 메모리로 맥락 유지 및 관련 기억 검색",
+          "● 20+ 도구 지원 (파일, 웹검색, 일정, 메모리 등)",
+          "● npm 패키지로 간편 설치 및 커스터마이징",
+        ],
+        link: "https://github.com/DinN0000/CompanionBot",
       },
       {
         slug: "side-ai-pkm",
