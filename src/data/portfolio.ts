@@ -1,7 +1,7 @@
 export const portfolio = {
   // 메트릭 (상단 바)
   metrics: {
-    projects: 7,
+    projects: 10,
     exp: "6yr",
   },
 
@@ -61,13 +61,13 @@ export const portfolio = {
 ╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝    ╚═╝
 `,
     whoAmI: {
-      title: "WHO AM I?",
+      title: "WHY I DO THIS",
       content: [
-        "고복잡도 시장의 어려운 문제에서 기회를 발견하고,",
-        "제품으로 풀어내는 Product Owner 이종화입니다.",
+        "복잡한 문제일수록 풀었을 때 가치가 크다고 믿습니다.",
+        "규제와 기술이 맞물린 블록체인·핀테크에서 일하는 이유도 같습니다.",
         "",
-        "기술과 규제가 얽힌 블록체인·핀테크 도메인에서",
-        "사용자 관점의 해결책을 만들어갑니다.",
+        "사용자가 겪는 진짜 문제를 찾고,",
+        "엔지니어·디자이너·법무와 함께 해결책을 만들어갑니다.",
       ],
     },
     coreValues: {
@@ -75,26 +75,27 @@ export const portfolio = {
       content: [
         "● 문제 발굴 — 겉으로 드러난 요구사항이 아닌, 진짜 문제를 찾습니다",
         "● 사용자 중심 — 사용자의 입장에서 제품의 문제를 풀어냅니다",
+        "● 빠른 검증 — 아이디어를 데모로 직접 구현해 필드에서 검증합니다",
       ],
     },
     strengths: {
-      title: "STRENGTHS",
+      title: "HOW I WORK",
       items: [
         {
-          name: "AI 전문성",
-          description: "Human-AI Interaction 논문 3편 (AI UX 연구) + 팀 AI 워크플로우 구축 + AI-PKM 시스템 직접 개발",
+          name: "리서치 방법론",
+          description: "연세대 HCI Lab (김진우 교수) — IDI, FGI, A/B 테스트, 정성+정량 혼합 설계",
         },
         {
-          name: "E2E 오너십",
-          description: "기획부터 딜리버리까지 전 과정을 책임지고, 복잡한 이해관계를 조율합니다",
+          name: "AI 실무 적용",
+          description: "논문 연구(3편)에서 팀 워크플로우 설계까지. Claude/Cursor 기반 생산성 시스템 직접 구축·배포",
         },
         {
-          name: "사용자 리서치",
-          description: "HCI Lab 석사 과정 (연세대 김진우 교수), IDI/FGI/A/B 테스트, 정성+정량 방법론",
+          name: "이해관계자 조율",
+          description: "엔지니어·디자인·법무·경영진 사이에서 기술 검토와 규제 리스크를 동시에 조율하여 의사결정 리드",
         },
         {
-          name: "규제 분석",
-          description: "VASP 규제 분석 및 Non-VASP 모델 도출, 스테이블코인 사업 모델 설계",
+          name: "규제 기반 제품 설계",
+          description: "VASP 규제 분석 → Non-VASP 모델 도출, 규제 리스크를 제품 전략으로 전환",
         },
       ],
     },
@@ -171,12 +172,27 @@ export const portfolio = {
         title: "NODIT",
         period: "2022 - 2023",
         role: "Product Owner",
-        summary: "블록체인 API 상품화",
+        summary: "블록체인 멀티체인 API/SDK 상품화 플랫폼",
         description: [
-          "● API/SDK 상품화 기획",
-          "● 기술 문서화 및 개발자 경험 설계",
+          "● 문제: 블록체인 데이터 접근의 높은 기술 장벽, 개발자별 개별 노드 운영 부담",
+          "● 솔루션: 멀티체인 API/SDK 상품화, 개발자 온보딩 최적화 (문서·샌드박스·대시보드)",
+          "● 결과: 개발자 DX 중심 설계로 API 채택률 향상, 기술 문서 체계 구축",
         ],
-        tags: ["Blockchain", "API", "DevTools"],
+        tags: ["Blockchain", "API", "DevTools", "DX"],
+        link: null,
+      },
+      {
+        slug: "project-gowid",
+        title: "법인카드 관리 SaaS",
+        period: "2021 - 2022",
+        role: "Product Manager",
+        summary: "법인카드 사용 데이터 기반 비용 관리 SaaS",
+        description: [
+          "● 문제: 법인카드 비용 관리의 수작업 비효율과 데이터 사일로",
+          "● 솔루션: 카드 사용 데이터 분석 기반 고객 세그먼트 정의, 핵심 페르소나 도출",
+          "● 결과: 데이터 드리븐 고객 분류 체계 수립, 타겟 마케팅 기반 마련",
+        ],
+        tags: ["SaaS", "FinTech", "Data", "B2B"],
         link: null,
       },
       {
@@ -186,9 +202,9 @@ export const portfolio = {
         role: "UX Researcher",
         summary: "정부과제 기반 그룹 금융 서비스 연구",
         description: [
-          "● Human-AI Interaction 논문 3편 게재",
-          "● IDI, FGI, A/B 테스트 수행",
-          "● 사용자 리서치 기반 서비스 설계",
+          "● 문제: 개인 투자의 정보 비대칭과 그룹 기반 금융 서비스 가능성 탐색",
+          "● 솔루션: IDI/FGI/A/B 테스트 기반 사용자 니즈 도출, AI 포트폴리오 서비스 설계",
+          "● 결과: Human-AI Interaction 논문 3편 게재, 정부과제 목표 달성",
         ],
         tags: ["Research", "HCI", "AI", "Government"],
         link: null,

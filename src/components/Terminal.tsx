@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { portfolio } from "@/data/portfolio";
 
-type Section = "intro" | "home" | "work" | "work-detail" | "fun" | "fun-detail" | "resume";
+type Section = "intro" | "home" | "about" | "work" | "work-detail" | "fun" | "resume";
 
 interface TerminalLine {
-  type: "command" | "output" | "ascii" | "system" | "menu" | "divider" | "section-title" | "highlight" | "muted" | "tagline";
+  type: "command" | "output" | "ascii" | "system" | "menu" | "divider" | "section-title" | "highlight" | "muted" | "tagline" | "link";
   content: string;
+  href?: string;
 }
 
 const MENU_ITEMS = [
@@ -297,6 +298,7 @@ export default function Terminal() {
         ]),
         { type: "divider", content: "──────────────────────────────────────────────────" },
         { type: "muted", content: "↑ 하이라이트 · 아래 메뉴에서 상세 정보 확인" },
+        { type: "muted", content: "💬 아무 질문이나 입력하면 AI가 포트폴리오 기반으로 답변합니다 (10회/시간)" },
       ];
       addLines(homeLines, () => {
         setShowMenu(true);
@@ -349,7 +351,7 @@ export default function Terminal() {
   }, [showPressEnter, showHome]);
 
   const showAbout = useCallback(() => {
-    setCurrentSection("home"); // reuse home section state
+    setCurrentSection("about");
     setPaletteIndex(1); // 현재 섹션 하이라이트
     showLoadingBar("about.md", () => {
       const aboutLines: TerminalLine[] = [
@@ -464,7 +466,7 @@ export default function Terminal() {
       );
 
       if (project.link) {
-        detailLines.push({ type: "output", content: `→ ${project.link} ↗` });
+        detailLines.push({ type: "link", content: `→ ${project.link} ↗`, href: project.link });
       }
 
       addLines(detailLines, () => setShowMenu(true));
@@ -492,7 +494,7 @@ export default function Terminal() {
           funLines.push({ type: "output", content: line });
         });
         if (project.link) {
-          funLines.push({ type: "system", content: `→ ${project.link} ↗` });
+          funLines.push({ type: "link", content: `→ ${project.link} ↗`, href: project.link });
         }
         funLines.push({ type: "output", content: "" });
       });
@@ -568,9 +570,12 @@ export default function Terminal() {
     if (trimmed === "clear") {
       setLines([]);
       setShowMenu(false);
-      setShowPressEnter(false);
-      setIntroComplete(false);
-      showIntro();
+      if (introComplete) {
+        showHome();
+      } else {
+        setShowPressEnter(false);
+        showIntro();
+      }
       return;
     }
 
@@ -714,6 +719,19 @@ export default function Terminal() {
             {line.content}
           </div>
         );
+      case "link":
+        return (
+          <div key={index} className={`${baseAnimation}`}>
+            <a
+              href={line.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:text-accent/80 underline underline-offset-2 text-sm"
+            >
+              {line.content}
+            </a>
+          </div>
+        );
       case "tagline":
         return (
           <div key={index} className={`${baseAnimation}`}>
@@ -791,7 +809,8 @@ export default function Terminal() {
                   }}
                   className="text-accent glow-cyan cursor-blink-text hover:opacity-80 transition-opacity"
                 >
-                  [ Press Enter to continue ]
+                  <span className="hidden sm:inline">[ Press Enter to continue ]</span>
+                  <span className="sm:hidden">[ Tap to continue ]</span>
                 </button>
               </div>
             )}
@@ -890,7 +909,7 @@ export default function Terminal() {
                         ? "Enter를 눌러 계속하세요..."
                         : isLoading
                           ? "thinking..."
-                          : "명령어를 입력하거나 질문하세요...")
+                          : "메뉴 선택 또는 AI에게 질문하세요...")
                     : ""
                 }
                 className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted/50 text-base sm:text-sm text-left"
