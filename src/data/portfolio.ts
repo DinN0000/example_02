@@ -304,7 +304,7 @@ export const portfolio = {
           "● Claude API 연동 AI 채팅 기능",
           "● 터미널 인터페이스 UX 구현",
         ],
-        link: null,
+        link: "https://example-02.pages.dev/",
       },
       {
         slug: "side-companionbot",
