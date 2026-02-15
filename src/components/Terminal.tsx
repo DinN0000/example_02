@@ -691,7 +691,7 @@ export default function Terminal() {
         );
       case "divider":
         return (
-          <div key={index} className={`text-muted/70 select-none text-sm ${baseAnimation}`}>
+          <div key={index} className={`text-muted/70 select-none text-sm my-2 ${baseAnimation}`}>
             {line.content}
           </div>
         );
@@ -703,7 +703,7 @@ export default function Terminal() {
         );
       case "section-title":
         return (
-          <div key={index} className={`text-section-title font-semibold text-base mt-3 mb-1 ${baseAnimation}`}>
+          <div key={index} className={`text-section-title font-semibold text-base mt-4 mb-2 ${baseAnimation}`}>
             <span className="text-muted/50 mr-2">##</span>
             {line.content.replace(/^##\s*/, '')}
           </div>
@@ -795,7 +795,7 @@ export default function Terminal() {
           className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="w-full max-w-3xl px-6 py-6 space-y-0.5">
+          <div className="w-full max-w-3xl px-6 py-6 space-y-1.5">
             {lines.map((line, index) => renderLine(line, index))}
             
             {/* Press Enter to continue */}
