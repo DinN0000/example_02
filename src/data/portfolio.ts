@@ -296,6 +296,17 @@ export const portfolio = {
         link: "https://github.com/DinN0000/DotBrain",
       },
       {
+        slug: "side-pfplay",
+        title: "PFPlay",
+        summary: "버려진 NFT가 다시 살아나는 2차 커뮤니티",
+        description: [
+          "● 바이브 중인 빌더들이 옆자리에 켜놓고 참여하는 음악 커뮤니티",
+          "● 지갑 속 잊혀진 NFT를 아바타로 부활, 실시간 파티룸에서 DJ & 리스너 상호작용",
+          "● 0에서 시작해 팀원을 한 명씩 모아 기획·디자인·프론트·백엔드 팀 빌딩 및 리딩",
+        ],
+        link: "https://github.com/orgs/pfplay",
+      },
+      {
         slug: "side-terminal-portfolio",
         title: "터미널 포트폴리오",
         summary: "이 사이트! AI와 대화하는 터미널 스타일 포트폴리오",
