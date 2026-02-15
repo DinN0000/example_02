@@ -112,6 +112,26 @@ a:hover {
   animation: scanline-flicker 5s ease-in-out infinite;
 }
 
+/* CRT phosphor grain — subtle dot matrix */
+.scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.4) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+  pointer-events: none;
+}
+
+/* CRT vignette — edge darkening */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0,0,0,0.25) 100%);
+  pointer-events: none;
+}
+
 @keyframes scanline-flicker {
   0%, 100% { opacity: 0.9; }
   50% { opacity: 1; }
@@ -141,12 +161,12 @@ a:hover {
 @keyframes typeReveal {
   from {
     opacity: 0;
-    transform: translateY(2px);
-    filter: blur(1px);
+    transform: translateX(-1px);
+    filter: blur(0.5px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
     filter: blur(0);
   }
 }
