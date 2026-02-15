@@ -353,7 +353,7 @@ export default function Terminal() {
       { type: "output", content: "불확실성을 구조화하고 제품으로 풀어온" },
       { type: "output", content: "Product Owner 이종화입니다." },
       { type: "output", content: "" },
-      { type: "muted", content: "[system] vibe-coded with Claude Code × Opus 4.5" },
+      { type: "muted", content: "[system] vibe-coded with Claude Code × DotBrain" },
       { type: "output", content: "" },
     ];
     addLines(introLines, () => {
