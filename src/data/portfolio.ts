@@ -298,11 +298,13 @@ export const portfolio = {
       {
         slug: "side-pfplay",
         title: "PFPlay",
-        summary: "버려진 NFT가 다시 살아나는 2차 커뮤니티",
+        summary: "버려진 NFT가 다시 살아나는 음악 큐레이션 2차 커뮤니티",
         description: [
-          "● 바이브 중인 빌더들이 옆자리에 켜놓고 참여하는 음악 커뮤니티",
-          "● 지갑 속 잊혀진 NFT를 아바타로 부활, 실시간 파티룸에서 DJ & 리스너 상호작용",
+          "● Plug.dj에서 영감 — 돌아가며 DJ하고, 듣고, 반응하는 실시간 파티룸",
+          "● 지갑 속 잊혀진 NFT를 아바타로 부활시켜 커뮤니티 정체성으로 활용",
+          "● 큐레이션 기여를 온체인 평판(Reputation Score)으로 기록, 보상과 연결",
           "● 0에서 시작해 팀원을 한 명씩 모아 기획·디자인·프론트·백엔드 팀 빌딩 및 리딩",
+          "● Web2 서비스 90% 완성, 온체인 기능 확장 준비 중",
         ],
         link: "https://github.com/orgs/pfplay",
       },
