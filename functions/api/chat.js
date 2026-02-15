@@ -78,6 +78,7 @@ const SYSTEM_PROMPT = `당신은 이종화의 포트폴리오 어시스턴트입
 - 상명대학교 컴퓨터과학 학사 (2012-2019)
 
 == 사이드 프로젝트 ==
+- PFPlay: 버려진 NFT가 다시 살아나는 2차 커뮤니티. 바이브 중인 빌더들이 옆자리에 켜놓고 참여하는 음악 커뮤니티. NFT 아바타 부활, 실시간 파티룸 DJ 경험. 0에서 시작해 팀원을 한 명씩 모아 기획·디자인·프론트·백엔드 팀 빌딩 및 리딩.
 - DotBrain: "Built for Humans. Optimized for AI." — 지식 관리의 병목(수동 분류 비용 + AI 맥락 부재)을 AI 자동 분류로 동시 해결하는 macOS 앱. Swift 11,300줄, 오픈소스. 본업의 AI 시스템 구축 역량을 제품으로 증명.
 - 터미널 포트폴리오: 이 사이트 (Next.js 16 + Claude API)
 - CompanionBot: Claude 기반 AI 텔레그램 봇
