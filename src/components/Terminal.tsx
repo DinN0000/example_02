@@ -766,7 +766,7 @@ export default function Terminal() {
         
         {/* 헤더 */}
         <header className="h-11 shrink-0 bg-card border-b border-border flex items-center justify-center">
-          <div className="w-full max-w-3xl px-6 flex items-center justify-between">
+          <div className="w-full max-w-3xl px-4 sm:px-6 flex items-center justify-between">
             {/* Traffic lights (macOS style) */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -801,7 +801,7 @@ export default function Terminal() {
           className="flex-1 overflow-y-auto overflow-x-hidden flex justify-center"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="w-full max-w-3xl px-6 py-6 space-y-1.5">
+          <div className="w-full max-w-3xl px-4 sm:px-6 py-6 space-y-1.5">
             {lines.map((line, index) => renderLine(line, index))}
             
             {/* Press Enter to continue */}
@@ -828,7 +828,7 @@ export default function Terminal() {
 
         {/* 푸터 */}
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
-          <div className="w-full max-w-3xl px-6 py-3">
+          <div className="w-full max-w-3xl px-4 sm:px-6 py-3">
             {/* Command Palette - 인풋 포커스 시 표시 */}
             {(isFocused || showPaletteHint) && introComplete && !isTyping && !isLoading && !showPressEnter && (
               <div className="fade-in absolute bottom-full left-4 right-4 sm:left-auto sm:right-6 mb-3 sm:w-72 bg-card border border-border rounded-lg overflow-hidden shadow-lg shadow-black/30">
