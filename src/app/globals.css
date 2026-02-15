@@ -48,12 +48,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-background);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: transparent;
   border-radius: 3px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--color-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
