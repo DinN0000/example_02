@@ -112,16 +112,16 @@ a:hover {
   z-index: 9999;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.03) 0px,
-    rgba(0, 0, 0, 0.03) 1px,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
     transparent 1px,
     transparent 2px
   );
-  animation: scanline-flicker 4s ease-in-out infinite;
+  animation: scanline-flicker 5s ease-in-out infinite;
 }
 
 @keyframes scanline-flicker {
-  0%, 100% { opacity: 0.95; }
+  0%, 100% { opacity: 0.9; }
   50% { opacity: 1; }
 }
 
