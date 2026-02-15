@@ -58,6 +58,7 @@ export default function Terminal() {
   const [showPressEnter, setShowPressEnter] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [showPaletteHint, setShowPaletteHint] = useState(false);
   const [paletteIndex, setPaletteIndex] = useState(0);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -303,6 +304,11 @@ export default function Terminal() {
       addLines(homeLines, () => {
         setShowMenu(true);
         setPaletteIndex(1); // 다음 섹션으로
+        if (!localStorage.getItem('palette_seen')) {
+          setShowPaletteHint(true);
+          localStorage.setItem('palette_seen', '1');
+          setTimeout(() => setShowPaletteHint(false), 4000);
+        }
       });
     });
   }, [addLines, showLoadingBar]);
@@ -824,7 +830,7 @@ export default function Terminal() {
         <footer className="shrink-0 bg-card border-t border-border flex items-center justify-center relative">
           <div className="w-full max-w-3xl px-6 py-3">
             {/* Command Palette - 인풋 포커스 시 표시 */}
-            {isFocused && introComplete && !isTyping && !isLoading && !showPressEnter && (
+            {(isFocused || showPaletteHint) && introComplete && !isTyping && !isLoading && !showPressEnter && (
               <div className="fade-in absolute bottom-full right-6 mb-3 w-72 bg-card border border-border rounded-lg overflow-hidden shadow-lg shadow-black/30">
                 {/* Header */}
                 <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
@@ -865,7 +871,7 @@ export default function Terminal() {
             )}
             {/* Status bar above input */}
             {introComplete && (
-              <div className="flex items-center justify-between mb-2 text-[10px] text-muted/40">
+              <div className="flex items-center justify-between mb-2 text-[11px] text-muted/60">
                 <div className="flex items-center gap-3">
                   <span>
                     Next: [{MENU_ITEMS[paletteIndex]?.key}] {MENU_ITEMS[paletteIndex]?.label} {MENU_ITEMS[paletteIndex]?.desc}
