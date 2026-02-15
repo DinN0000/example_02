@@ -298,7 +298,7 @@ export const portfolio = {
       {
         slug: "side-pfplay",
         title: "PFPlay",
-        summary: "컨텐츠가 소모된 커뮤니티를 음악으로 다시 모으는 2차 커뮤니티",
+        summary: "느슨한 재연결로 관계를 이어가는 2차 음악 커뮤니티",
         description: [
           "● 바이브 중인 빌더들이 틀어놓고 참여하는 실시간 음악 파티룸",
           "● 돌아가며 DJ, 듣고 반응하는 구조 — 접속만으로 커뮤니티가 유지됨",
