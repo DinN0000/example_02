@@ -831,7 +831,7 @@ export default function Terminal() {
           <div className="w-full max-w-3xl px-6 py-3">
             {/* Command Palette - 인풋 포커스 시 표시 */}
             {(isFocused || showPaletteHint) && introComplete && !isTyping && !isLoading && !showPressEnter && (
-              <div className="fade-in absolute bottom-full right-6 mb-3 w-72 bg-card border border-border rounded-lg overflow-hidden shadow-lg shadow-black/30">
+              <div className="fade-in absolute bottom-full left-4 right-4 sm:left-auto sm:right-6 mb-3 sm:w-72 bg-card border border-border rounded-lg overflow-hidden shadow-lg shadow-black/30">
                 {/* Header */}
                 <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
                   <span className="text-muted text-[11px]">Select Command</span>
@@ -850,7 +850,7 @@ export default function Terminal() {
                           handleMenuClick(item.cmd);
                         }}
                         onMouseEnter={() => setPaletteIndex(index)}
-                        className={`w-full px-3 py-2 rounded-md flex items-center text-left transition-colors duration-100 ${
+                        className={`w-full px-3 py-3 sm:py-2 rounded-md flex items-center text-left transition-colors duration-100 ${
                           isSelected ? 'bg-accent/15' : 'bg-transparent'
                         }`}
                       >
@@ -929,7 +929,7 @@ export default function Terminal() {
               <button
                 type="submit"
                 disabled={isTyping || isLoading}
-                className="shrink-0 w-7 h-7 rounded-md flex items-center justify-center bg-accent/15 text-accent hover:bg-accent/25 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="shrink-0 w-10 h-10 sm:w-7 sm:h-7 rounded-md flex items-center justify-center bg-accent/15 text-accent hover:bg-accent/25 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label="Submit"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
