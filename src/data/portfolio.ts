@@ -12,6 +12,7 @@ export const portfolio = {
     role: "Product Owner",
     email: "bulzib123@gmail.com",
     linkedin: "linkedin.com/in/jongwha-lee-000",
+    github: "github.com/DinN0000",
     phone: "010.8531.3992",
   },
 

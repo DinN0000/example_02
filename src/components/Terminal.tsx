@@ -576,7 +576,8 @@ export default function Terminal() {
         { type: "output", content: "" },
         { type: "divider", content: "──────────────────────────────────────────────────" },
         { type: "output", content: `📧 ${portfolio.profile.email}` },
-        { type: "output", content: `💼 ${portfolio.profile.linkedin}` },
+        { type: "link", content: `💼 ${portfolio.profile.linkedin} ↗`, href: `https://${portfolio.profile.linkedin}` },
+        { type: "link", content: `🐙 ${portfolio.profile.github} ↗`, href: `https://${portfolio.profile.github}` },
       );
 
       addLines(resumeLines, () => {
