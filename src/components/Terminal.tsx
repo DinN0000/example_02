@@ -59,6 +59,7 @@ export default function Terminal() {
   const [introComplete, setIntroComplete] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showPaletteHint, setShowPaletteHint] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [paletteIndex, setPaletteIndex] = useState(0);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,6 +72,25 @@ export default function Terminal() {
     work: 2,
     fun: 3,
     resume: 4,
+  };
+
+  // Theme initialization
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+      setTheme(saved);
+      document.documentElement.classList.toggle('light', saved === 'light');
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('theme', next);
+    document.documentElement.classList.toggle('light', next === 'light');
   };
 
   // Real-time clock
@@ -758,7 +778,7 @@ export default function Terminal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black font-mono">
+    <div className="fixed inset-0 bg-outer font-mono">
       {/* Scanline overlay */}
       <div className="scanlines" />
       
@@ -791,6 +811,13 @@ export default function Terminal() {
             <div className="flex items-center gap-4 text-muted text-xs">
               <span className="hidden sm:inline">PROJECTS: <span className="text-highlight-cyan">{portfolio.metrics.projects}</span></span>
               <span className="hidden sm:inline">EXP: <span className="text-highlight-orange">{portfolio.metrics.exp}</span></span>
+              <button
+                onClick={toggleTheme}
+                className="text-muted hover:text-accent transition-colors"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? '[light]' : '[dark]'}
+              </button>
               <span className="text-accent font-medium glow-accent">{currentTime}</span>
             </div>
           </div>

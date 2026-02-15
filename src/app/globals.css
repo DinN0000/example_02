@@ -18,6 +18,65 @@
   --color-section-title: #58d4c3;
   --color-highlight-cyan: #79c0ff;
   --color-highlight-orange: #ffa657;
+
+  /* Outer frame (behind card) */
+  --color-outer: #000000;
+}
+
+/* ── Light mode overrides ── */
+html.light {
+  --color-background: #f5f2ef;
+  --color-foreground: #2c2a28;
+  --color-muted: #8a8885;
+  --color-accent: #2d9e8f;
+  --color-accent-dim: #238a7c;
+  --color-accent-glow: #2d9e8f30;
+  --color-border: #dedad6;
+  --color-card: #f9f7f5;
+  --color-outer: #ebe8e4;
+  --color-section-title: #2d9e8f;
+  --color-highlight-cyan: #0969da;
+  --color-highlight-orange: #c45711;
+}
+
+html.light ::selection {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Light mode: disable glow effects */
+html.light .text-section-title,
+html.light .glow-accent,
+html.light .glow-cyan {
+  text-shadow: none;
+}
+
+html.light a:hover {
+  text-shadow: none;
+}
+
+html.light .cursor-blink-text {
+  animation: blink 1s step-end infinite;
+}
+
+/* Light mode: softer CRT */
+html.light .scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.02) 0px,
+    rgba(0, 0, 0, 0.02) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+html.light .scanlines::before {
+  opacity: 0.015;
+  background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 0.5px, transparent 0.5px);
+}
+
+html.light .scanlines::after {
+  background: radial-gradient(ellipse at 50% 50%, transparent 65%, rgba(0,0,0,0.06) 100%);
 }
 
 * {
