@@ -43,25 +43,13 @@ body {
   color: var(--color-background);
 }
 
+/* Hide scrollbar but keep scroll functionality */
 ::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-}
-
-*:hover::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-muted);
+* {
+  scrollbar-width: none; /* Firefox */
 }
 
 /* Links */
